@@ -138,7 +138,7 @@ const testimonials = [
   {
     id: 1,
     name: "Aditya Srivastava",
-    role: "Co-Founder; Product & Design",
+    role: "CEO & CTO",
     bgColor: "#1f1933",
     textColor: "white",
     testimonial:
@@ -151,11 +151,11 @@ const testimonials = [
   {
     id: 2,
     name: "Harsh Vardhan Singh",
-    role: "FOUNDER; STRATEGY & FINANCE",
+    role: "CMO & COO",
     bgColor: "white",
     textColor: "#565656",
     testimonial:
-      "MeetKats is a refreshing alternative to traditional professional networking platforms. Its intuitive design, smarter matchmaking for opportunities, and focus on meaningful connections set it apart. The platform feels more personal and less cluttered, making it easier to showcase your skills and actually engage with others. A promising new era for career networking!",
+      "With an unending passion and lasting love for management, I recently transitioned from engineering to management and execution. My main focus is on crafting strategies and building partnerships. I am determined to make sure that MeetKats hits the market with impact with our vision, energy and relentless efforts.",
     hasReadMore: false,
     readMoreColor: "#ffa26d",
     profileImage: "/harsh.png",
@@ -164,11 +164,11 @@ const testimonials = [
   {
     id: 3,
     name: "Aditya Srivastava",
-    role: "Chief Technology Officer",
+    role: "CEO & CTO",
     bgColor: "white",
     textColor: "#565656",
     testimonial:
-      "MeetKats is redefining how professionals connect. Unlike other platforms, it prioritizes real interactions over noisy feeds. The user experience is sleek, the networking tools are smart, and job discovery feels more relevant. It’s clear MeetKats is built for the modern professional.",
+      "As the CTO and CEO, i foster the tech and innovation behind the product. I, alongside my dedicated team, am working day and night to bring the app to life, juggling a variety of responsibilities- from development to deployment with precision and passion.My goal is one: to make sure that MeetKats hits the market with impact!",
     hasReadMore: false,
     readMoreColor: "#fe7700",
     profileImage: "/addy.png",
