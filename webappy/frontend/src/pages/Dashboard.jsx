@@ -14,6 +14,7 @@ import eventService from '../services/eventService';
 import networkService from '../services/networkService';
 import nearbyUsersService from '../services/nearbyUsersService';
 import LocationPermissionIcon from '../components/LocationPermissionIcon';
+import Footer from '../components/footer/Footer';
 
 const MergedDashboard = () => {
   // Auth and navigation
@@ -488,7 +489,7 @@ const fetchNearbyUsers = async (latitude, longitude, distance) => {
       </div>
       
       {/* Main Content */}
-      <div className="flex-1 overflow-auto pb-16 md:pb-0">
+      <div className="flex-1 overflow-auto pb-16 md:pb-0 md:mt-16">
         <div className="md:pl-0 pl-0 md:pt-0 pt-4">
           <main className="max-w-7xl mx-auto p-4 md:p-6">
             {/* Dashboard Header */}
@@ -649,6 +650,10 @@ const fetchNearbyUsers = async (latitude, longitude, distance) => {
                           <Link to="/my-events" className="text-white bg-orange-500 hover:bg-orange-600 rounded-md px-2 py-1 text-xs flex items-center">
                            
                             My Events
+                          </Link>
+                          <Link to="/tickets" className="text-white bg-orange-500 hover:bg-orange-600 rounded-md px-2 py-1 text-xs flex items-center">
+                           
+                            My Tickets
                           </Link>
                           <Link to="/events" className="text-orange-500 hover:text-orange-600 text-xs md:text-sm">View All</Link>
                         </div>
@@ -1139,12 +1144,30 @@ const fetchNearbyUsers = async (latitude, longitude, distance) => {
             )}
           </main>
 
-          {/* Footer */}
-          <footer className="bg-gradient-to-r from-orange-600 to-orange-700 text-white py-3 md:py-4 mt-6">
-            <div className="max-w-7xl mx-auto px-4 text-center">
-              <p className="text-xs md:text-sm">© 2025 MeetKats • Privacy Policy • Terms of Service</p>
-            </div>
-          </footer>
+
+{/*FOOTER */}
+          {/* <footer className="bg-gradient-to-r from-orange-600 to-orange-700 text-white py-3 md:py-4 mt-6">
+  <div className="max-w-7xl mx-auto px-4 text-center">
+    <p className="text-xs md:text-sm">
+      © 2025 MeetKats •{" "}
+      <a
+        href="/privacypolicy"
+        className="hover:underline hover:text-orange-300 transition"
+      >
+        Privacy Policy
+      </a>{" "}
+      •{" "}
+      <a
+        href="/termsandconditions"
+        className="hover:underline hover:text-orange-300 transition"
+      >
+        Terms of Service
+      </a>
+    </p>
+  </div>
+</footer> */}
+
+
         </div>
       </div>
     </div>
