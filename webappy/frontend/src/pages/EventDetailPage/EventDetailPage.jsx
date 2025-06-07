@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { useParams, useNavigate } from "react-router-dom"
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   Share2Icon,
   MapPin,
@@ -15,22 +15,27 @@ import {
   FileText,
   Edit,
   AlertTriangle,
-} from "lucide-react"
-import { Button } from "../../components/ui/button"
-import { Card, CardContent } from "../../components/ui/card"
-import { Textarea } from "../../components/ui/textarea"
-import { FooterBlock } from "../BhoomiLandingPage/sections/FooterBlock"
-import { format } from "date-fns"
-import { AddToCalendarButton } from "add-to-calendar-button-react"
-import { useAuth } from "../../context/AuthContext"
-import eventService from "../../services/eventService"
-import ticketService from "../../services/ticketService"
-import Sidebar from '../../components/common/Navbar';
+} from "lucide-react";
+import { Button } from "../../components/ui/button";
+import { Card, CardContent } from "../../components/ui/card";
+import { Textarea } from "../../components/ui/textarea";
+import { FooterBlock } from "../BhoomiLandingPage/sections/FooterBlock";
+import { format } from "date-fns";
+import { AddToCalendarButton } from "add-to-calendar-button-react";
+import { useAuth } from "../../context/AuthContext";
+import eventService from "../../services/eventService";
+import ticketService from "../../services/ticketService";
+import Sidebar from "../../components/common/Navbar";
 
 // Image component with fallback
-const ImageWithFallback = ({ src, alt, className, fallbackClass = "bg-gray-200" }) => {
-  const [hasError, setHasError] = useState(false)
-  const [isLoaded, setIsLoaded] = useState(false)
+const ImageWithFallback = ({
+  src,
+  alt,
+  className,
+  fallbackClass = "bg-gray-200",
+}) => {
+  const [hasError, setHasError] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   return (
     <div className={`${fallbackClass} ${className}`}>
@@ -38,40 +43,42 @@ const ImageWithFallback = ({ src, alt, className, fallbackClass = "bg-gray-200" 
         <img
           src={src || "/placeholder.svg"}
           alt={alt}
-          className={`w-full h-full object-cover transition-opacity duration-300 ${isLoaded ? "opacity-100" : "opacity-0"}`}
+          className={`w-full h-full object-cover transition-opacity duration-300 ${
+            isLoaded ? "opacity-100" : "opacity-0"
+          }`}
           onError={() => {
-            console.log(`Image failed to load: ${src}`)
-            setHasError(true)
+            console.log(`Image failed to load: ${src}`);
+            setHasError(true);
           }}
           onLoad={() => setIsLoaded(true)}
         />
       )}
     </div>
-  )
-}
+  );
+};
 
 export const EventDetailPage = ({ user, onLogout }) => {
-  const { eventId } = useParams()
-  const navigate = useNavigate()
-  const { user: authUser } = useAuth()
+  const { eventId } = useParams();
+  const navigate = useNavigate();
+  const { user: authUser } = useAuth();
 
   // State management
-  const [event, setEvent] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-  const [userResponse, setUserResponse] = useState(null)
-  const [ticketTypes, setTicketTypes] = useState([])
-  const [showAllDescription, setShowAllDescription] = useState(false)
-  const [ticketsLoading, setTicketsLoading] = useState(false)
-  const [organizer, setOrganizer] = useState(null)
-  const [isHost, setIsHost] = useState(false)
-  const [hasForm, setHasForm] = useState(false)
-  const [formLoading, setFormLoading] = useState(false)
-  const [attendees, setAttendees] = useState([])
-  const [commentText, setCommentText] = useState("")
-  const [submittingComment, setSubmittingComment] = useState(false)
-  const [loadingAttendees, setLoadingAttendees] = useState(false)
-  const [sortOrder, setSortOrder] = useState("newest")
+  const [event, setEvent] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [userResponse, setUserResponse] = useState(null);
+  const [ticketTypes, setTicketTypes] = useState([]);
+  const [showAllDescription, setShowAllDescription] = useState(false);
+  const [ticketsLoading, setTicketsLoading] = useState(false);
+  const [organizer, setOrganizer] = useState(null);
+  const [isHost, setIsHost] = useState(false);
+  const [hasForm, setHasForm] = useState(false);
+  const [formLoading, setFormLoading] = useState(false);
+  const [attendees, setAttendees] = useState([]);
+  const [commentText, setCommentText] = useState("");
+  const [submittingComment, setSubmittingComment] = useState(false);
+  const [loadingAttendees, setLoadingAttendees] = useState(false);
+  const [sortOrder, setSortOrder] = useState("newest");
   const [comments, setComments] = useState([
     {
       id: 1,
@@ -87,237 +94,251 @@ export const EventDetailPage = ({ user, onLogout }) => {
         },
       ],
     },
-  ])
+  ]);
 
   // Format date for display
   const formatDate = (dateString) => {
-    if (!dateString) return "Date TBA"
+    if (!dateString) return "Date TBA";
 
     try {
-      const options = { weekday: "long", year: "numeric", month: "long", day: "numeric" }
-      return new Date(dateString).toLocaleDateString("en-US", options)
+      const options = {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      };
+      return new Date(dateString).toLocaleDateString("en-US", options);
     } catch (err) {
-      console.error("Date formatting error:", err)
-      return "Invalid date"
+      console.error("Date formatting error:", err);
+      return "Invalid date";
     }
-  }
+  };
 
   // Format time for display
   const formatTime = (dateString) => {
-    if (!dateString) return "Time TBA"
+    if (!dateString) return "Time TBA";
 
     try {
-      const options = { hour: "2-digit", minute: "2-digit" }
-      return new Date(dateString).toLocaleTimeString("en-US", options)
+      const options = { hour: "2-digit", minute: "2-digit" };
+      return new Date(dateString).toLocaleTimeString("en-US", options);
     } catch (err) {
-      console.error("Time formatting error:", err)
-      return "Invalid time"
+      console.error("Time formatting error:", err);
+      return "Invalid time";
     }
-  }
+  };
 
   // Safely get the attendee count
   const getAttendeeCount = (attendeeCounts, type) => {
-    if (!attendeeCounts) return 0
+    if (!attendeeCounts) return 0;
 
-    const count = attendeeCounts[type]
+    const count = attendeeCounts[type];
 
     if (typeof count === "number") {
-      return count
+      return count;
     }
 
     if (count && typeof count === "object" && count.count !== undefined) {
-      return count.count
+      return count.count;
     }
 
-    return 0
-  }
+    return 0;
+  };
 
   // Calculate time remaining until event
   const getTimeRemaining = (eventDate) => {
-    if (!eventDate) return null
+    if (!eventDate) return null;
 
-    const now = new Date()
-    const event = new Date(eventDate)
-    const diff = event - now
+    const now = new Date();
+    const event = new Date(eventDate);
+    const diff = event - now;
 
-    if (diff <= 0) return null // Event has passed
+    if (diff <= 0) return null; // Event has passed
 
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24))
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
 
     if (days > 0) {
-      return `${days} day${days !== 1 ? "s" : ""} remaining`
+      return `${days} day${days !== 1 ? "s" : ""} remaining`;
     } else if (hours > 0) {
-      return `${hours} hour${hours !== 1 ? "s" : ""} remaining`
+      return `${hours} hour${hours !== 1 ? "s" : ""} remaining`;
     } else {
-      return "Starting soon"
+      return "Starting soon";
     }
-  }
+  };
 
   // Fetch event details
   useEffect(() => {
     const fetchEventDetails = async () => {
-      setLoading(true)
+      setLoading(true);
       try {
         // Check if we have a valid eventId
         if (!eventId) {
-          setError("Invalid event ID. Please check the URL and try again.")
-          setLoading(false)
-          return
+          setError("Invalid event ID. Please check the URL and try again.");
+          setLoading(false);
+          return;
         }
 
-        console.log("Fetching event with ID:", eventId)
+        console.log("Fetching event with ID:", eventId);
 
         // Fetch event details from API
-        const response = await eventService.getEvent(eventId)
+        const response = await eventService.getEvent(eventId);
         if (!response || !response.data) {
-          throw new Error("No data received from server")
+          throw new Error("No data received from server");
         }
 
-        const eventData = response.data
-        setEvent(eventData)
-        setUserResponse(eventData.userResponse)
+        const eventData = response.data;
+        setEvent(eventData);
+        setUserResponse(eventData.userResponse);
 
         // Check if current user is the host
         if (authUser && eventData.createdBy) {
-          const creatorId = eventData.createdBy._id || eventData.createdBy.id
-          const userId = authUser.id
-          const isCreator = creatorId === userId
+          const creatorId = eventData.createdBy._id || eventData.createdBy.id;
+          const userId = authUser.id;
+          const isCreator = creatorId === userId;
 
           const isEventHost = eventData.attendees?.some((attendee) => {
-            const attendeeId = attendee.user?._id || attendee.user
-            return attendeeId === userId && ["host", "organizer"].includes(attendee.role)
-          })
+            const attendeeId = attendee.user?._id || attendee.user;
+            return (
+              attendeeId === userId &&
+              ["host", "organizer"].includes(attendee.role)
+            );
+          });
 
-          setIsHost(isCreator || isEventHost)
-          setOrganizer(eventData.createdBy)
+          setIsHost(isCreator || isEventHost);
+          setOrganizer(eventData.createdBy);
         }
 
         // Fetch ticket types if available
         try {
-          setTicketsLoading(true)
-          const ticketsResponse = await ticketService.getEventTicketTypes(eventId)
-          const ticketData = ticketsResponse.data || []
-          setTicketTypes(Array.isArray(ticketData) ? ticketData : [])
+          setTicketsLoading(true);
+          const ticketsResponse = await ticketService.getEventTicketTypes(
+            eventId
+          );
+          const ticketData = ticketsResponse.data || [];
+          setTicketTypes(Array.isArray(ticketData) ? ticketData : []);
         } catch (ticketError) {
-          console.error("Error fetching ticket types:", ticketError)
+          console.error("Error fetching ticket types:", ticketError);
         } finally {
-          setTicketsLoading(false)
+          setTicketsLoading(false);
         }
 
         // Fetch attendees
         try {
-          setLoadingAttendees(true)
-          const attendeesResponse = await eventService.getEventAttendees(eventId)
-          const attendeeData = attendeesResponse?.going || []
-          setAttendees(Array.isArray(attendeeData) ? attendeeData : [])
+          setLoadingAttendees(true);
+          const attendeesResponse = await eventService.getEventAttendees(
+            eventId
+          );
+          const attendeeData = attendeesResponse?.going || [];
+          setAttendees(Array.isArray(attendeeData) ? attendeeData : []);
         } catch (attendeesError) {
-          console.error("Error fetching attendees:", attendeesError)
+          console.error("Error fetching attendees:", attendeesError);
         } finally {
-          setLoadingAttendees(false)
+          setLoadingAttendees(false);
         }
 
         // Check if event has custom form
         try {
-          setFormLoading(true)
-          const formResponse = await eventService.getCustomForm(eventId)
-          setHasForm(!!formResponse)
+          setFormLoading(true);
+          const formResponse = await eventService.getCustomForm(eventId);
+          setHasForm(!!formResponse);
         } catch (formError) {
-          console.log("No custom form found for this event")
-          setHasForm(false)
+          console.log("No custom form found for this event");
+          setHasForm(false);
         } finally {
-          setFormLoading(false)
+          setFormLoading(false);
         }
       } catch (err) {
-        console.error("Error fetching event details:", err)
-        setError(err.message || "Failed to load event details. Please try again later.")
+        console.error("Error fetching event details:", err);
+        setError(
+          err.message || "Failed to load event details. Please try again later."
+        );
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchEventDetails()
-  }, [eventId, authUser])
+    fetchEventDetails();
+  }, [eventId, authUser]);
 
   // Handle user response to event (going, maybe, declined)
   const handleResponseClick = async (status) => {
     try {
       // Check if we have a valid eventId
       if (!eventId) {
-        console.error("Cannot respond: Invalid event ID")
-        alert("Cannot respond to this event. Invalid event ID.")
-        return
+        console.error("Cannot respond: Invalid event ID");
+        alert("Cannot respond to this event. Invalid event ID.");
+        return;
       }
 
-      console.log(`Responding to event ${eventId} with status: ${status}`)
+      console.log(`Responding to event ${eventId} with status: ${status}`);
 
       // Call API to update response
-      await eventService.respondToEvent(eventId, status)
+      await eventService.respondToEvent(eventId, status);
 
       // Update local state
-      setUserResponse(status)
+      setUserResponse(status);
 
       // Refresh event data to get updated attendee counts
-      const response = await eventService.getEvent(eventId)
-      setEvent(response.data)
+      const response = await eventService.getEvent(eventId);
+      setEvent(response.data);
 
       // If the user is now "going", refresh the attendees list
       if (status === "going") {
-        const attendeesResponse = await eventService.getEventAttendees(eventId)
-        setAttendees(attendeesResponse?.going || [])
+        const attendeesResponse = await eventService.getEventAttendees(eventId);
+        setAttendees(attendeesResponse?.going || []);
       }
     } catch (error) {
-      console.error("Failed to update response:", error)
-      alert("Failed to update your response. Please try again later.")
+      console.error("Failed to update response:", error);
+      alert("Failed to update your response. Please try again later.");
     }
-  }
+  };
 
   const handleAddToCalendar = async () => {
     try {
       if (!eventId) {
-        console.error("Cannot add to calendar: Invalid event ID")
-        alert("Cannot add this event to calendar. Invalid event ID.")
-        return
+        console.error("Cannot add to calendar: Invalid event ID");
+        alert("Cannot add this event to calendar. Invalid event ID.");
+        return;
       }
 
-      console.log("Adding event to calendar:", eventId)
-      await eventService.addToCalendar(eventId)
+      console.log("Adding event to calendar:", eventId);
+      await eventService.addToCalendar(eventId);
 
       // Show success message
-      alert("Event added to your calendar")
+      alert("Event added to your calendar");
     } catch (error) {
-      console.error("Failed to add to calendar:", error)
-      alert("Failed to add event to calendar. Please try again later.")
+      console.error("Failed to add to calendar:", error);
+      alert("Failed to add event to calendar. Please try again later.");
     }
-  }
+  };
 
   // Handle form navigation based on user role
   const handleFormNavigation = () => {
     if (isHost) {
       // If user is host/organizer, navigate to form edit/create page
-      navigate(`/events/${eventId}/form/create`)
+      navigate(`/events/${eventId}/register-event`);
     } else {
       // If user is attendee, navigate to form submission page
-      navigate(`/events/${eventId}/form`)
+      navigate(`/events/${eventId}/form`);
     }
-  }
+  };
 
   const handleBuyTickets = () => {
-    navigate(`/tickets/book/${eventId}`)
-  }
+    navigate(`/tickets/book/${eventId}`);
+  };
 
   // Handle comment submission
   const handleSubmitComment = async (e) => {
-    e.preventDefault()
-    if (!commentText.trim()) return
+    e.preventDefault();
+    if (!commentText.trim()) return;
 
     try {
-      setSubmittingComment(true)
+      setSubmittingComment(true);
       // API call would go here
       // await eventService.addEventComment(eventId, commentText);
 
       // For now just simulate a delay and add to local state
-      await new Promise((resolve) => setTimeout(resolve, 500))
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
       const newComment = {
         id: comments.length + 1,
@@ -325,56 +346,69 @@ export const EventDetailPage = ({ user, onLogout }) => {
         comment: commentText,
         timestamp: new Date(),
         replies: [],
-      }
+      };
 
-      setComments([newComment, ...comments])
-      setCommentText("")
+      setComments([newComment, ...comments]);
+      setCommentText("");
     } catch (error) {
-      console.error("Error posting comment:", error)
-      alert("Failed to post comment. Please try again.")
+      console.error("Error posting comment:", error);
+      alert("Failed to post comment. Please try again.");
     } finally {
-      setSubmittingComment(false)
+      setSubmittingComment(false);
     }
-  }
+  };
 
   // Handle share functionality
   const handleShare = () => {
     if (navigator.share) {
       navigator.share({
         title: event?.name || "Event",
-        text: event?.description?.substring(0, 100) + "..." || "Check out this event!",
+        text:
+          event?.description?.substring(0, 100) + "..." ||
+          "Check out this event!",
         url: window.location.href,
-      })
+      });
     } else {
       // Fallback - copy to clipboard
-      navigator.clipboard.writeText(window.location.href)
-      alert("Link copied to clipboard!")
+      navigator.clipboard.writeText(window.location.href);
+      alert("Link copied to clipboard!");
     }
-  }
+  };
 
   // Get going count safely
-  const goingCount = event ? getAttendeeCount(event.attendeeCounts, "going") : 0
-  const maybeCount = event ? getAttendeeCount(event.attendeeCounts, "maybe") : 0
-  const declinedCount = event ? getAttendeeCount(event.attendeeCounts, "declined") : 0
-  const timeRemaining = event ? getTimeRemaining(event.startDateTime) : null
+  const goingCount = event
+    ? getAttendeeCount(event.attendeeCounts, "going")
+    : 0;
+  const maybeCount = event
+    ? getAttendeeCount(event.attendeeCounts, "maybe")
+    : 0;
+  const declinedCount = event
+    ? getAttendeeCount(event.attendeeCounts, "declined")
+    : 0;
+  const timeRemaining = event ? getTimeRemaining(event.startDateTime) : null;
 
   const responseButtons = [
     { id: "going", label: "Going", count: goingCount, color: "#22c55e" },
     { id: "maybe", label: "Maybe", count: maybeCount, color: "#eab308" },
-    { id: "declined", label: "Can't Go", count: declinedCount, color: "#ef4444" },
-  ]
+    {
+      id: "declined",
+      label: "Can't Go",
+      count: declinedCount,
+      color: "#ef4444",
+    },
+  ];
 
   const venue = event?.location
     ? {
-      name: event.location.name || "Venue TBA",
-      address: event.location.address || "Address TBA",
-      coordinates: event.location.coordinates || "26.5123°N, 80.2329°E",
-    }
+        name: event.location.name || "Venue TBA",
+        address: event.location.address || "Address TBA",
+        coordinates: event.location.coordinates || "26.5123°N, 80.2329°E",
+      }
     : {
-      name: "Venue TBA",
-      address: "Address TBA",
-      coordinates: "26.5123°N, 80.2329°E",
-    }
+        name: "Venue TBA",
+        address: "Address TBA",
+        coordinates: "26.5123°N, 80.2329°E",
+      };
 
   if (loading) {
     return (
@@ -384,7 +418,7 @@ export const EventDetailPage = ({ user, onLogout }) => {
           <p className="mt-4 text-gray-600">Loading event details...</p>
         </div>
       </div>
-    )
+    );
   }
 
   if (error || !event) {
@@ -392,8 +426,12 @@ export const EventDetailPage = ({ user, onLogout }) => {
       <div className="flex items-center justify-center h-screen">
         <div className="text-center p-8 bg-white rounded-lg shadow-sm max-w-md">
           <AlertTriangle size={48} className="mx-auto text-green-500 mb-4" />
-          <h2 className="text-xl font-bold text-gray-800 mb-2">Event Not Found</h2>
-          <p className="text-gray-600 mb-6">{error || "We couldn't find the event you're looking for."}</p>
+          <h2 className="text-xl font-bold text-gray-800 mb-2">
+            Event Not Found
+          </h2>
+          <p className="text-gray-600 mb-6">
+            {error || "We couldn't find the event you're looking for."}
+          </p>
           <div className="flex flex-col space-y-3">
             <button
               className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition"
@@ -410,7 +448,7 @@ export const EventDetailPage = ({ user, onLogout }) => {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -426,7 +464,10 @@ export const EventDetailPage = ({ user, onLogout }) => {
           <div
             className="absolute inset-0 bg-cover bg-center"
             style={{
-              backgroundImage: `url(${event.coverImage?.url || "https://images.pexels.com/photos/2774556/pexels-photo-2774556.jpeg"})`,
+              backgroundImage: `url(${
+                event.coverImage?.url ||
+                "https://images.pexels.com/photos/2774556/pexels-photo-2774556.jpeg"
+              })`,
               filter: "blur(8px)",
               transform: "scale(1.1)",
               zIndex: 0,
@@ -464,14 +505,19 @@ export const EventDetailPage = ({ user, onLogout }) => {
                       onClick={handleShare}
                     >
                       <Share2Icon className="w-5 h-5" />
-                      <span className="font-['Roboto',Helvetica] text-sm">Share</span>
+                      <span className="font-['Roboto',Helvetica] text-sm">
+                        Share
+                      </span>
                     </Button>
                   </div>
 
                   <div
-                    className={`font-['Roboto',Helvetica] font-normal text-black text-base text-justify mb-4 ${showAllDescription ? "" : "line-clamp-6"}`}
+                    className={`font-['Roboto',Helvetica] font-normal text-black text-base text-justify mb-4 ${
+                      showAllDescription ? "" : "line-clamp-6"
+                    }`}
                   >
-                    {event.description || "No description provided for this event."}
+                    {event.description ||
+                      "No description provided for this event."}
                   </div>
 
                   {event.description && event.description.length > 150 && (
@@ -495,7 +541,9 @@ export const EventDetailPage = ({ user, onLogout }) => {
                   {hasForm && (
                     <div className="mt-4 bg-green-50 p-4 rounded-lg border border-green-200 mb-6">
                       <div className="flex justify-between items-center mb-2">
-                        <h3 className="font-semibold text-gray-900">Registration Required</h3>
+                        <h3 className="font-semibold text-gray-900">
+                          Registration Required
+                        </h3>
                         <button
                           onClick={handleFormNavigation}
                           className="cursor-pointer bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-3 rounded text-sm transition"
@@ -515,13 +563,29 @@ export const EventDetailPage = ({ user, onLogout }) => {
                   <div className="mt-6">
                     <AddToCalendarButton
                       name={event.name}
-                      description={event.description || "Join us for this exciting event!"}
-                      startDate={
-                        event.startDateTime ? format(new Date(event.startDateTime), "yyyy-MM-dd") : "2024-02-20"
+                      description={
+                        event.description || "Join us for this exciting event!"
                       }
-                      startTime={event.startDateTime ? format(new Date(event.startDateTime), "HH:mm") : "09:00"}
-                      endDate={event.endDateTime ? format(new Date(event.endDateTime), "yyyy-MM-dd") : "2024-02-20"}
-                      endTime={event.endDateTime ? format(new Date(event.endDateTime), "HH:mm") : "19:00"}
+                      startDate={
+                        event.startDateTime
+                          ? format(new Date(event.startDateTime), "yyyy-MM-dd")
+                          : "2024-02-20"
+                      }
+                      startTime={
+                        event.startDateTime
+                          ? format(new Date(event.startDateTime), "HH:mm")
+                          : "09:00"
+                      }
+                      endDate={
+                        event.endDateTime
+                          ? format(new Date(event.endDateTime), "yyyy-MM-dd")
+                          : "2024-02-20"
+                      }
+                      endTime={
+                        event.endDateTime
+                          ? format(new Date(event.endDateTime), "HH:mm")
+                          : "19:00"
+                      }
                       timeZone="America/New_York"
                       location={venue.address}
                       options={["Google", "Apple", "Microsoft365", "iCal"]}
@@ -533,12 +597,21 @@ export const EventDetailPage = ({ user, onLogout }) => {
                     {responseButtons.map((button) => (
                       <button
                         key={button.id}
-                        className={`px-6 py-3 rounded-lg border-2 transition-all flex items-center gap-2 text-sm font-semibold ${userResponse === button.id ? "text-white" : "text-black hover:bg-gray-50"
-                          }`}
+                        className={`px-6 py-3 rounded-lg border-2 transition-all flex items-center gap-2 text-sm font-semibold ${
+                          userResponse === button.id
+                            ? "text-white"
+                            : "text-black hover:bg-gray-50"
+                        }`}
                         style={{
-                          backgroundColor: userResponse === button.id ? button.color : "transparent",
+                          backgroundColor:
+                            userResponse === button.id
+                              ? button.color
+                              : "transparent",
                           borderColor: button.color,
-                          color: userResponse === button.id ? "#ffffff" : button.color,
+                          color:
+                            userResponse === button.id
+                              ? "#ffffff"
+                              : button.color,
                         }}
                         onClick={() => handleResponseClick(button.id)}
                       >
@@ -546,7 +619,10 @@ export const EventDetailPage = ({ user, onLogout }) => {
                         <span
                           className="px-2 py-1 rounded-full text-xs"
                           style={{
-                            backgroundColor: userResponse === button.id ? "rgba(255,255,255,0.2)" : button.color,
+                            backgroundColor:
+                              userResponse === button.id
+                                ? "rgba(255,255,255,0.2)"
+                                : button.color,
                             color: "#ffffff",
                           }}
                         >
@@ -567,8 +643,12 @@ export const EventDetailPage = ({ user, onLogout }) => {
                       <p className="font-['Roboto',Helvetica] font-light text-black text-base max-w-[203px] mx-auto md:mx-0">
                         {venue.name}
                         <br />
-                        {event.virtual ? "Virtual Event" : "In-Person Event"} <br />
-                        {formatTime(event.startDateTime)} - {formatTime(event.endDateTime)}
+                        {event.virtual
+                          ? "Virtual Event"
+                          : "In-Person Event"}{" "}
+                        <br />
+                        {formatTime(event.startDateTime)} -{" "}
+                        {formatTime(event.endDateTime)}
                       </p>
                     </div>
 
@@ -577,7 +657,9 @@ export const EventDetailPage = ({ user, onLogout }) => {
                         Organiser
                       </h3>
                       <p className="font-['Roboto',Helvetica] font-light text-black text-base max-w-[203px] mx-auto md:mx-0">
-                        {organizer ? `${organizer.firstName} ${organizer.lastName}` : "Event Organizer"}
+                        {organizer
+                          ? `${organizer.firstName} ${organizer.lastName}`
+                          : "Event Organizer"}
                         <br />
                         {organizer?.headline && (
                           <>
@@ -588,12 +670,15 @@ export const EventDetailPage = ({ user, onLogout }) => {
                       </p>
                       {organizer && (
                         <button
-                          onClick={() => navigate(`/profile/${organizer._id || organizer.id}`)}
+                          onClick={() =>
+                            navigate(
+                              `/profile/${organizer._id || organizer.id}`
+                            )
+                          }
                           className="cursor-pointer inline-block px-4 py-2 mt-2 text-sm font-medium text-white bg-green-600 rounded hover:bg-green-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2"
                         >
                           View Profile
                         </button>
-
                       )}
                     </div>
 
@@ -605,8 +690,10 @@ export const EventDetailPage = ({ user, onLogout }) => {
                         {ticketsLoading
                           ? "Loading..."
                           : ticketTypes && ticketTypes.length > 0
-                            ? `${ticketTypes.length} ticket type${ticketTypes.length > 1 ? "s" : ""} available`
-                            : "Free Event"}
+                          ? `${ticketTypes.length} ticket type${
+                              ticketTypes.length > 1 ? "s" : ""
+                            } available`
+                          : "Free Event"}
                       </p>
                       {ticketTypes && ticketTypes.length > 0 && (
                         <button
@@ -615,7 +702,6 @@ export const EventDetailPage = ({ user, onLogout }) => {
                         >
                           Book Tickets
                         </button>
-
                       )}
                     </div>
 
@@ -642,7 +728,9 @@ export const EventDetailPage = ({ user, onLogout }) => {
 
         {/* About Section */}
         <div className="container mx-auto px-4 md:px-10 mt-12">
-          <h2 className="font-['Roboto',Helvetica] font-bold text-black text-2xl mb-4">About the Event</h2>
+          <h2 className="font-['Roboto',Helvetica] font-bold text-black text-2xl mb-4">
+            About the Event
+          </h2>
           <div className="font-['Roboto',Helvetica] font-normal text-black text-base mb-8 whitespace-pre-line">
             {event.description || "No description provided for this event."}
           </div>
@@ -668,22 +756,34 @@ export const EventDetailPage = ({ user, onLogout }) => {
           {/* Location Section */}
           {!event.virtual && (
             <div className="mb-12">
-              <h2 className="font-['Roboto',Helvetica] font-bold text-black text-2xl mb-4">Location</h2>
+              <h2 className="font-['Roboto',Helvetica] font-bold text-black text-2xl mb-4">
+                Location
+              </h2>
               <div className="bg-gray-50 p-6 rounded-lg mb-4">
                 <div className="flex items-start gap-2 mb-4">
                   <MapPin className="w-5 h-5 mt-1 text-textblue" />
                   <div>
-                    <h3 className="font-['Roboto',Helvetica] font-semibold text-lg mb-1">{venue.name}</h3>
+                    <h3 className="font-['Roboto',Helvetica] font-semibold text-lg mb-1">
+                      {venue.name}
+                    </h3>
                     <p className="text-gray-600">{venue.address}</p>
                     {event.location?.city && (
                       <p className="text-gray-600">
-                        {[event.location.city, event.location.state, event.location.country].filter(Boolean).join(", ")}
+                        {[
+                          event.location.city,
+                          event.location.state,
+                          event.location.country,
+                        ]
+                          .filter(Boolean)
+                          .join(", ")}
                       </p>
                     )}
                   </div>
                 </div>
                 <a
-                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(venue.address)}`}
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                    venue.address
+                  )}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center text-textblue hover:text-textblue/80 transition-colors"
@@ -694,7 +794,9 @@ export const EventDetailPage = ({ user, onLogout }) => {
               </div>
               <div className="w-full h-[400px] rounded-lg overflow-hidden">
                 <iframe
-                  src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyCZIBrnTH_SdjsqTRt4KNCfFIamMP8Tckk&q=${encodeURIComponent(venue.address)}`}
+                  src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyCZIBrnTH_SdjsqTRt4KNCfFIamMP8Tckk&q=${encodeURIComponent(
+                    venue.address
+                  )}`}
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
@@ -707,7 +809,9 @@ export const EventDetailPage = ({ user, onLogout }) => {
           )}
 
           {/* Guests Section */}
-          <h2 className="font-['Roboto',Helvetica] font-bold text-black text-2xl mb-4">Guests</h2>
+          <h2 className="font-['Roboto',Helvetica] font-bold text-black text-2xl mb-4">
+            Guests
+          </h2>
 
           {loadingAttendees ? (
             <div className="flex justify-center my-6">
@@ -725,8 +829,9 @@ export const EventDetailPage = ({ user, onLogout }) => {
                           alt={attendee.user.firstName}
                           src={attendee.user.profileImage || "/placeholder.svg"}
                           onError={(e) => {
-                            e.target.onerror = null
-                            e.target.src = "https://via.placeholder.com/150?text=?"
+                            e.target.onerror = null;
+                            e.target.src =
+                              "https://via.placeholder.com/150?text=?";
                           }}
                         />
                       ) : (
@@ -739,7 +844,9 @@ export const EventDetailPage = ({ user, onLogout }) => {
                     </div>
                     <p className="font-['Roboto',Helvetica] font-normal text-black text-base text-center">
                       {attendee.user
-                        ? `${attendee.user.firstName || ""} ${attendee.user.lastName || ""}`.trim() || "Guest"
+                        ? `${attendee.user.firstName || ""} ${
+                            attendee.user.lastName || ""
+                          }`.trim() || "Guest"
                         : "Guest"}
                     </p>
                     <p className="font-['Roboto',Helvetica] font-extralight text-black text-xs text-center">
@@ -769,7 +876,9 @@ export const EventDetailPage = ({ user, onLogout }) => {
 
           {/* Discussion Section */}
           <div className="mb-12">
-            <h2 className="font-['Roboto',Helvetica] font-bold text-black text-2xl mb-4">Discussion</h2>
+            <h2 className="font-['Roboto',Helvetica] font-bold text-black text-2xl mb-4">
+              Discussion
+            </h2>
 
             {/* Comment Form */}
             <div className="bg-gray-50 p-6 rounded-lg mb-8">
@@ -817,10 +926,13 @@ export const EventDetailPage = ({ user, onLogout }) => {
                   .sort((a, b) =>
                     sortOrder === "newest"
                       ? b.timestamp.getTime() - a.timestamp.getTime()
-                      : a.timestamp.getTime() - b.timestamp.getTime(),
+                      : a.timestamp.getTime() - b.timestamp.getTime()
                   )
                   .map((comment) => (
-                    <div key={comment.id} className="bg-white p-6 rounded-lg shadow-sm">
+                    <div
+                      key={comment.id}
+                      className="bg-white p-6 rounded-lg shadow-sm"
+                    >
                       <div className="flex justify-between mb-2">
                         <h4 className="font-semibold">{comment.name}</h4>
                         <span className="text-sm text-gray-500">
@@ -833,11 +945,17 @@ export const EventDetailPage = ({ user, onLogout }) => {
                       {comment.replies && comment.replies.length > 0 && (
                         <div className="ml-8 mt-4 space-y-4">
                           {comment.replies.map((reply) => (
-                            <div key={reply.id} className="bg-gray-50 p-4 rounded-lg">
+                            <div
+                              key={reply.id}
+                              className="bg-gray-50 p-4 rounded-lg"
+                            >
                               <div className="flex justify-between mb-2">
                                 <h4 className="font-semibold">{reply.name}</h4>
                                 <span className="text-sm text-gray-500">
-                                  {format(reply.timestamp, "MMM d, yyyy 'at' h:mm a")}
+                                  {format(
+                                    reply.timestamp,
+                                    "MMM d, yyyy 'at' h:mm a"
+                                  )}
                                 </span>
                               </div>
                               <p className="text-gray-700">{reply.comment}</p>
@@ -862,12 +980,14 @@ export const EventDetailPage = ({ user, onLogout }) => {
           {/* Host controls - only visible to event hosts/organizers */}
           {isHost && (
             <div className="bg-white rounded-lg shadow-sm p-6 mt-8 border-l-4 border-green-500">
-              <h2 className="text-xl font-bold text-gray-900 mb-4">Host Controls</h2>
+              <h2 className="text-xl font-bold text-gray-900 mb-4">
+                Host Controls
+              </h2>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 {/* Manage form */}
                 <div
-                  onClick={() => navigate(`/events/${eventId}/form/edit`)}
+                  onClick={handleFormNavigation}
                   className="bg-gray-50 hover:bg-gray-100 p-4 rounded-lg cursor-pointer transition border border-gray-200"
                 >
                   <div className="flex items-center justify-between mb-2">
@@ -875,7 +995,9 @@ export const EventDetailPage = ({ user, onLogout }) => {
                     <FileText size={18} className="text-green-600" />
                   </div>
                   <p className="text-sm text-gray-600">
-                    {hasForm ? "Edit registration form" : "Create registration form"}
+                    {hasForm
+                      ? "Edit registration form"
+                      : "Create registration form"}
                   </p>
                 </div>
 
@@ -905,7 +1027,9 @@ export const EventDetailPage = ({ user, onLogout }) => {
                     <Users size={18} className="text-green-600" />
                   </div>
                   <p className="text-sm text-gray-600">
-                    {goingCount > 0 ? `Manage ${goingCount} attendees` : "No attendees yet"}
+                    {goingCount > 0
+                      ? `Manage ${goingCount} attendees`
+                      : "No attendees yet"}
                   </p>
                 </div>
 
@@ -928,5 +1052,5 @@ export const EventDetailPage = ({ user, onLogout }) => {
         <FooterBlock />
       </div>
     </div>
-  )
-}
+  );
+};
