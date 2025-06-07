@@ -1068,7 +1068,7 @@ export const BhoomiLandingPage = () => {
                   </div>
                 </div>
                 {/* Separator */}
-                <Separator orientation="vertical" className="h-[416px] mx-4" />
+                <Separator orientation="vertical" className="md:h-[416px] mx-4" />
                 {/* OtherApps Column */}
                 <div className="flex-1">
                   <h3 className="text-[40px] font-medium text-[#353333] text-center tracking-[-0.80px] mb-12 font-['Poppins',Helvetica]">
