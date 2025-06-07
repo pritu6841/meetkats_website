@@ -248,11 +248,11 @@ const Sidebar = ({ user = {}, onLogout }) => {
                 to="/dashboard"
                 className="flex items-center space-x-3 group"
               >
-                <div className="h-8 w-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center shadow-md group-hover:shadow-lg transition-all duration-200">
+                <div className="h-8 w-8 rounded-md  justify-center shadow-md group-hover:shadow-lg transition-all duration-200">
                   <img
                     src={img || "/placeholder.svg"}
                     alt=""
-                    className="h-6 w-6 rounded-md"
+                    className="h-8 w-8 "
                   />
                 </div>
                 <span className="text-lg font-semibold text-gray-900 hidden sm:block">
