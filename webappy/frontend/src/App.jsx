@@ -5,6 +5,7 @@ import { ToastProvider } from './components/common/Toast'
 import { useAuth } from './context/AuthContext';
 // Pages
 import AuthPage from './pages/AuthPage';
+import ForgotPasswordPage from './pages/ForgotPassword';
 import ChildAbuse from './pages/ChildAbuse';
 import Discover from './pages/DiscoverPage';
 import ProfileSetupPage from './pages/ProfileSetupPage';
@@ -94,6 +95,7 @@ const App = () => {
           {/*<Route path="/landingpage" element={<LandingPage />} />*/}
           <Route path="/landingpage" element={<BhoomiLandingPage />} />
           <Route path="/login" element={<AuthPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/signup" element={<AuthPage type="signup" />} />
           <Route path="/phone-login" element={<AuthPage type="phone-login" />} />
           <Route path="/auth/callback" element={<AuthPage />} />

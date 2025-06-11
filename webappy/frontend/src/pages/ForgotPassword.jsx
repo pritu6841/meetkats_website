@@ -34,6 +34,7 @@ export default function ForgotPasswordPage() {
     setIsSubmitted(false);
     setEmail("");
     setError("");
+    window.location.href = "/login"; // Redirect to login page
   };
 
   return (
