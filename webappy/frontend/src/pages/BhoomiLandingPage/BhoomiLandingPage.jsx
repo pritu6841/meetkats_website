@@ -1,6 +1,6 @@
 import { FooterBlock } from "./sections/FooterBlock";
 import React from 'react';
-import { useState,useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../../components/ui/accordion";
 import { useAuth } from '../../context/AuthContext';
 import { Separator } from "../../components/ui/separator";
@@ -258,13 +258,13 @@ export const BhoomiLandingPage = () => {
   const [hovered, setHovered] = useState(null);
   const { login, socialLogin } = useAuth();
   const handleGoogleLogin = useCallback(() => {
-      socialLogin('google');
-    }, [socialLogin]);
-  
-    const handleLinkedInLogin = useCallback(() => {
-      socialLogin('linkedin');
-    }, [socialLogin]);
-    
+    socialLogin('google');
+  }, [socialLogin]);
+
+  const handleLinkedInLogin = useCallback(() => {
+    socialLogin('linkedin');
+  }, [socialLogin]);
+
   const buttons = [
     {
       id: "google",
@@ -343,9 +343,9 @@ export const BhoomiLandingPage = () => {
       bgColor: "bg-[#f0eaff]",
     },
   ];
-  //LinkedIn vs MeetKats Section Essentials
-  // LinkedIn features data
-  const linkedinFeatures = [
+  //Otherapp vs MeetKats Section Essentials
+  // OtherApp features data
+  const OtherAppFeatures = [
     "Broad, global, often impersonal",
     "Focused on content & personal branding",
     "Minimal visibility for tier 2/3 colleges",
@@ -482,12 +482,13 @@ export const BhoomiLandingPage = () => {
 
             {/* Auth Buttons */}
             <div className="mt-8 space-y-2 max-w-sm">
+            
               {buttons.map((button) => (
                 <button
                   key={button.id}
-                  className={`w-72 flex justify-center items-center gap-3 ${button.bgColor
+                  className={`w-72 flex justify-center cursor-pointer items-center gap-3 ${button.bgColor
                     } ${button.textColor} ${button.hoverBg
-                    } rounded-lg shadow-md border border-gray-200 font-medium text-base justify-center h-12 transition-all duration-300 transform ${hovered === button.id ? "scale-[1.02]" : ""
+                    } rounded-lg shadow-md  border border-gray-200 font-medium text-base h-12 transition-all duration-300 transform ${hovered === button.id ? "scale-[1.02]" : ""
                     }`}
                   onMouseEnter={() => setHovered(button.id)}
                   onMouseLeave={() => setHovered(null)}
@@ -1038,44 +1039,17 @@ export const BhoomiLandingPage = () => {
 
           <section id="whymeetkats" className="relative w-full py-20 mt-10 bg-[#e2ecda]">
             <div className="container mx-auto px-4">
-              <h2 className="text-6xl font-semibold text-black text-center tracking-[-1.20px] mb-16 font-['Inter',Helvetica]">
-                LinkedIn vs MeetKats
+              <h2 className=" text-5xl sm:text-6xl font-semibold text-black text-center tracking-[-1.20px] mb-16 font-['Inter',Helvetica]">
+                MeetKats vs Other Apps
               </h2>
 
               <div className="flex flex-col md:flex-row justify-center items-start gap-8 relative">
-                {/* LinkedIn Column */}
-                <div className="flex-1">
-                  <h3 className="text-[40px] font-medium text-[#353333] text-center tracking-[-0.80px] mb-12 font-['Poppins',Helvetica]">
-                    LinkedIn
-                  </h3>
-                  <div className="space-y-[62px]">
-                    {linkedinFeatures.map((feature, index) => (
-                      <div
-                        key={`linkedin-${index}`}
-                        className="flex items-start gap-[52px]"
-                      >
-                        <div className="relative w-8 h-8 flex-shrink-0">
-                          <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center">
-                            <XIcon className="w-[25px] h-[26px] text-red-500" />
-                          </div>
-                        </div>
-                        <p className="font-medium text-[#191a15] text-lg leading-[30px] font-['Inter',Helvetica]">
-                          {feature}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Separator */}
-                <Separator orientation="vertical" className="h-[416px] mx-4" />
-
-                {/* MeetKats Column */}
-                <div className="flex-1">
+                   <div className="flex-1">
                   <h3 className="text-[40px] font-medium text-[#353333] text-center tracking-[-0.80px] mb-12 font-['Poppins',Helvetica]">
                     MeetKats
                   </h3>
-                  <div className="space-y-[62px]">
+                  {/* MeetKats Column */}
+                  <div className="space-y-[62px] lg:ml-24">
                     {meetkatsFeatures.map((feature, index) => (
                       <div
                         key={`meetkats-${index}`}
@@ -1093,6 +1067,36 @@ export const BhoomiLandingPage = () => {
                     ))}
                   </div>
                 </div>
+                {/* Separator */}
+                <Separator orientation="vertical" className="md:h-[416px] mx-4" />
+                {/* OtherApps Column */}
+                <div className="flex-1">
+                  <h3 className="text-[40px] font-medium text-[#353333] text-center tracking-[-0.80px] mb-12 font-['Poppins',Helvetica]">
+                    Other Apps
+                  </h3>
+                  <div className="space-y-[62px] lg:ml-24">
+                    {OtherAppFeatures.map((feature, index) => (
+                      <div
+                        key={`OtherApp-${index}`}
+                        className="flex items-start gap-[52px]"
+                      >
+                        <div className="relative w-8 h-8 flex-shrink-0">
+                          <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center">
+                            <XIcon className="w-[25px] h-[26px] text-red-500" />
+                          </div>
+                        </div>
+                        <p className="font-medium text-[#191a15] text-lg leading-[30px] font-['Inter',Helvetica]">
+                          {feature}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                
+
+                
+             
               </div>
             </div>
           </section>

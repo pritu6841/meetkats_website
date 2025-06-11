@@ -62,6 +62,7 @@ import EditEventForm from './pages/EditEventPage';
 import EditFormPage from './pages/EditFormPage';
 import CouponManagementPage from './pages/CouponManagementPage';
 import QRCertificateGenerator from "./pages/CertificateCreation.jsx"
+import RegisterEvent from './pages/RegisterEvent';
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
   const { user, isLoading } = useAuth();
@@ -147,9 +148,9 @@ const App = () => {
               <CustomFormCreatorPage />
             </ProtectedRoute>
           } />
-           <Route path="/events/:eventId/form/create" element={
+           <Route path="/events/:eventId/register-event" element={
             <ProtectedRoute>
-              <CustomFormCreatorPage />
+              <RegisterEvent />
             </ProtectedRoute>
           } />
           

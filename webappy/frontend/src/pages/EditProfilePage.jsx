@@ -367,7 +367,7 @@ const EditProfilePage = () => {
   if (loading) {
     return (
       <div className="flex h-screen bg-orange-50">
-        <Sidebar user={authUser} />
+        <Sidebar user={authUser || {}} />
         <div className="flex-1 overflow-auto">
           <div className="md:pl-0 pl-0 md:pt-0 pt-16 flex justify-center items-center h-64">
             <Loader />
@@ -379,7 +379,7 @@ const EditProfilePage = () => {
   
   return (
     <div className="flex h-screen bg-orange-50">
-      <Sidebar user={authUser} />
+      <Sidebar user={authUser || {}} />
       <div className="flex-1 overflow-auto">
         <div className="md:pl-0 pl-0 md:pt-0 pt-16">
           <div className="container mx-auto px-4 py-8">
