@@ -218,7 +218,7 @@ const NetworkExplorePage = () => {
       <div
         className={`flex-1 overflow-auto transition-all duration-300 ${"ml-60"}`}
       >
-        <main className="max-w-7xl mx-auto p-4 md:p-6">
+        <main className="max-w-7xl mx-auto p-4 md:p-6 mt-20">
           {/* Dashboard Header */}
           <div className="bg-white rounded-xl shadow-md mb-6 p-4 md:p-6 border-l-4 border-orange-500">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
