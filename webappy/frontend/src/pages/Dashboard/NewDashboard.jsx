@@ -473,23 +473,59 @@ const MergedDashboard = () => {
   // Handle connecting with a nearby user
   const handleConnect = async (userId) => {
     try {
-      await networkService.requestConnection(userId);
+      // Show loading state
       setNearbyUsers((prev) =>
         prev.map((user) =>
-          user._id === userId ? { ...user, connectionStatus: "pending" } : user
+          user._id === userId || user.id === userId
+            ? { ...user, connectionStatus: "loading" }
+            : user
         )
       );
 
-      if (toast) {
-        toast({
-          title: "Connection Request Sent",
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-        });
+      // Send connection request with the correct payload format
+      const response = await networkService.requestConnection({
+        requestId: userId, // The server expects requestId instead of userId
+        message: "",
+      });
+
+      // If we get a request ID back, save it
+      if (response && response._id) {
+        // Update UI to show pending state
+        setNearbyUsers((prev) =>
+          prev.map((user) =>
+            user._id === userId || user.id === userId
+              ? {
+                  ...user,
+                  connectionStatus: "pending",
+                  requestId: response._id,
+                }
+              : user
+          )
+        );
+
+        if (toast) {
+          toast({
+            title: "Connection Request Sent",
+            description: "The user will be notified of your request",
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+          });
+        }
+      } else {
+        throw new Error("Failed to get request ID from server");
       }
     } catch (error) {
       console.error("Error sending connection request:", error);
+
+      // Reset the connection status on error
+      setNearbyUsers((prev) =>
+        prev.map((user) =>
+          user._id === userId || user.id === userId
+            ? { ...user, connectionStatus: null }
+            : user
+        )
+      );
 
       if (toast) {
         toast({
@@ -580,13 +616,13 @@ const MergedDashboard = () => {
   }
 
   return (
-    <div className="flex flex-col md:flex-row h-screen bg-orange-50">
+    <div className="flex flex-col md:flex-row min-h-screen bg-orange-50">
       {/* Sidebar - hidden on mobile, visible on md and up */}
       <div className="hidden md:block">
         <Sidebar user={user || {}} onLogout={logout} />
       </div>
 
-      <div className="w-full px-4">
+      <div className="w-full px-4 mx-auto max-w-[1400px]">
         <div className="flex gap-4 mt-20">
           <div className="w-[979px]">
             <div className="bg-white rounded-lg shadow-md p-4 h-[131px] mb-4">
@@ -890,7 +926,7 @@ const MergedDashboard = () => {
                       <button
                         onClick={() => handleConnect(user._id || user.id)}
                         disabled={user.connectionStatus === "pending"}
-                        className={`w-full py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ${
+                        className={`w-full py-2.5 rounded-xl text-sm font-medium transition-all duration-300 cursor-pointer ${
                           user.connectionStatus === "pending"
                             ? "bg-gray-100 text-gray-500 cursor-not-allowed"
                             : "bg-orange-500 text-white hover:bg-orange-600 hover:shadow-md"
@@ -1011,7 +1047,7 @@ const MergedDashboard = () => {
                     Today
                   </button>
                 </div>
-                <div className="rounded-2xl border w-full border-gray-200 overflow-hidden bg-white shadow-sm w-full">
+                <div className="rounded-2xl border border-gray-200 overflow-hidden bg-white shadow-sm">
                   <DatePicker
                     selected={selectedDate}
                     onChange={(date) => setSelectedDate(date)}
@@ -1020,17 +1056,17 @@ const MergedDashboard = () => {
                     calendarClassName="!w-full !border-0"
                     dayClassName={(date) =>
                       `text-sm rounded-full transition duration-150 ease-in-out 
-            hover:bg-orange-100 
-            ${
-              date.toDateString() === new Date().toDateString()
-                ? "!text-orange-600 font-bold"
-                : ""
-            }
-            ${
-              date.toDateString() === selectedDate?.toDateString()
-                ? "!bg-orange-500 !text-white hover:!bg-orange-600"
-                : ""
-            }`
+                      hover:bg-orange-100 
+                      ${
+                        date.toDateString() === new Date().toDateString()
+                          ? "!text-orange-600 font-bold"
+                          : ""
+                      }
+                      ${
+                        date.toDateString() === selectedDate?.toDateString()
+                          ? "!bg-orange-500 !text-white hover:!bg-orange-600"
+                          : ""
+                      }`
                     }
                     renderCustomHeader={({
                       date,
@@ -1039,15 +1075,15 @@ const MergedDashboard = () => {
                       prevMonthButtonDisabled,
                       nextMonthButtonDisabled,
                     }) => (
-                      <div className="flex items-center justify-between px-4 py-3 bg-gray-50">
+                      <div className="flex items-center justify-between px-6 py-4 bg-orange-50">
                         <button
                           onClick={decreaseMonth}
                           disabled={prevMonthButtonDisabled}
-                          className="p-2 rounded-full hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="p-2 rounded-full hover:bg-orange-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                         >
-                          <ChevronLeft className="w-5 h-5 text-gray-600" />
+                          <ChevronLeft className="w-5 h-5 text-orange-600" />
                         </button>
-                        <span className="text-base font-semibold text-gray-700">
+                        <span className="text-lg font-semibold text-gray-800">
                           {date.toLocaleDateString("en-US", {
                             month: "long",
                             year: "numeric",
@@ -1056,9 +1092,9 @@ const MergedDashboard = () => {
                         <button
                           onClick={increaseMonth}
                           disabled={nextMonthButtonDisabled}
-                          className="p-2 rounded-full hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="p-2 rounded-full hover:bg-orange-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                         >
-                          <ChevronRight className="w-5 h-5 text-gray-600" />
+                          <ChevronRight className="w-5 h-5 text-orange-600" />
                         </button>
                       </div>
                     )}
