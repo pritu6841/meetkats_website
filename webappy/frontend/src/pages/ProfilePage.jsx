@@ -267,6 +267,70 @@ const ProfilePage = () => {
       alert("Error deleting experience");
     }
   };
+  //add education 
+  const [showEducationForm, setShowEducationForm] = useState(false);
+
+  const [newEducation, setNewEducation] = useState({
+    institution: "",
+    degree: "",
+    field: "",
+    startDate: "",
+    endDate: "",
+    description: "",
+    current: false
+  });
+  const handleEducationChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setNewEducation((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+  const handleAddEducation = async () => {
+    try {
+      const updatedEducation = [...(profile.education || []), newEducation];
+
+      const updatedProfile = {
+        ...profile,
+        education: updatedEducation
+      };
+
+      const response = await userService.updateProfile(updatedProfile);
+
+      setProfile(response);
+      setShowEducationForm(false);
+      setNewEducation({
+        institution: "",
+        degree: "",
+        field: "",
+        startDate: "",
+        endDate: "",
+        description: "",
+        current: false
+      });
+    } catch (error) {
+      console.error("Error adding education:", error);
+      alert("Failed to add education");
+    }
+  };
+
+  const handleDeleteEducation = async (indexToDelete) => {
+    try {
+      const updatedEducation = profile.education.filter((_, index) => index !== indexToDelete);
+
+      const updatedProfile = {
+        ...profile,
+        education: updatedEducation,
+      };
+
+      const response = await userService.updateProfile(updatedProfile);
+
+      setProfile(response); // Update UI after successful deletion
+    } catch (error) {
+      console.error("Error deleting education:", error);
+      alert("Failed to delete education");
+    }
+  };
 
   // The edit route has been moved to a separate profile editor component
   // This is just a placeholder for the edit route
@@ -411,7 +475,7 @@ const ProfilePage = () => {
     );
   }
 
-  console.log("Rendering complete profile");
+
   return (
     <div className="flex h-screen bg-orange-50">
       <Sidebar user={user || {}} />
@@ -813,7 +877,7 @@ const ProfilePage = () => {
                         <input
                           type="text"
                           name="company"
-                          placeholder="Company"
+                          placeholder="Company *"
                           value={newExperience.company}
                           onChange={handleExperienceChange}
                           className="w-full border rounded px-3 py-2"
@@ -822,7 +886,7 @@ const ProfilePage = () => {
                         <input
                           type="text"
                           name="position"
-                          placeholder="Position"
+                          placeholder="Position *"
                           value={newExperience.position}
                           onChange={handleExperienceChange}
                           required
@@ -973,11 +1037,85 @@ const ProfilePage = () => {
                         Education
                       </h2>
                       {isCurrentUser && (
-                        <button className="px-4 py-2 bg-orange-500 text-white text-sm rounded-lg hover:bg-orange-600 transition">
+                        <button className="px-4 py-2 bg-orange-500 text-white text-sm rounded-lg hover:bg-orange-600 transition"
+                          onClick={() => setShowEducationForm((prev) => !prev)}>
                           Add Education
                         </button>
                       )}
                     </div>
+                    {showEducationForm && (
+                      <div className="space-y-4 bg-gray-100 p-4 rounded-lg mb-4">
+                        <input
+                          name="institution"
+                          placeholder="Institution *"
+                          required
+                          value={newEducation.institution}
+                          onChange={handleEducationChange}
+                          className="w-full border rounded px-3 py-2"
+                        />
+                        <input
+                          name="degree"
+                          placeholder="Degree"
+                          value={newEducation.degree}
+                          onChange={handleEducationChange}
+                          className="w-full border rounded px-3 py-2"
+                        />
+                        <input
+                          name="field"
+                          placeholder="Field of Study"
+                          value={newEducation.field}
+                          onChange={handleEducationChange}
+                          className="w-full border rounded px-3 py-2"
+                        />
+                        <input
+                          type="date"
+                          name="startDate"
+                          value={newEducation.startDate}
+                          onChange={handleEducationChange}
+                          className="w-full border rounded px-3 py-2"
+                          max={new Date().toISOString().split("T")[0]}
+                        />
+                        <input
+                          type="date"
+                          name="endDate"
+                          value={newEducation.endDate}
+                          onChange={handleEducationChange}
+                          disabled={newEducation.current}
+                          className="w-full border rounded px-3 py-2"
+                        />
+                        <label className="flex items-center space-x-2">
+                          <input
+                            type="checkbox"
+                            name="current"
+                            checked={newEducation.current}
+                            onChange={handleEducationChange}
+                          />
+                          <span>Currently Studying</span>
+                        </label>
+                        <textarea
+                          name="description"
+                          placeholder="Description"
+                          value={newEducation.description}
+                          onChange={handleEducationChange}
+                          className="w-full border rounded px-3 py-2"
+                        ></textarea>
+
+                        <div className="flex gap-3">
+                          <button
+                            onClick={handleAddEducation}
+                            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                          >
+                            Save
+                          </button>
+                          <button
+                            onClick={() => setShowEducationForm(false)}
+                            className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    )}
 
                     {profile.education?.length > 0 ? (
                       <div className="space-y-6">
@@ -1022,6 +1160,14 @@ const ProfilePage = () => {
                                 </p>
                               </div>
                             </div>
+                            {isCurrentUser && showEducationForm && (
+                              <button
+                                onClick={() => handleDeleteEducation(index)}
+                                className="text-red-500 hover:underline text-sm"
+                              >
+                                Delete
+                              </button>
+                            )}
                           </div>
                         ))}
                       </div>
@@ -1037,11 +1183,7 @@ const ProfilePage = () => {
                           Add your education history to showcase your academic
                           background.
                         </p>
-                        {isCurrentUser && (
-                          <button className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600">
-                            Add Education
-                          </button>
-                        )}
+
                       </div>
                     )}
                   </div>
