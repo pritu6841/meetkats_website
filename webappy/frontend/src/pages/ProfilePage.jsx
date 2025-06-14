@@ -1196,43 +1196,20 @@ const ProfilePage = () => {
                       <h2 className="text-xl font-semibold text-gray-800">
                         Skills
                       </h2>
-                      {isCurrentUser && (
-                        <button className="px-4 py-2 bg-orange-500 text-white text-sm rounded-lg hover:bg-orange-600 transition">
-                          Add Skills
-                        </button>
-                      )}
                     </div>
+                  
 
-                    {profile.skills?.length > 0 ? (
+                    {Array.isArray(profile.skills) && profile.skills.length > 0 ? (
                       <div className="flex flex-wrap gap-2">
-                        {typeof profile.skills[0] === "string"
-                          ? // If skills are stored as IDs/strings
-                          profile.skills.map((skillId, index) => (
-                            <div
-                              key={index}
-                              className="bg-orange-50 rounded-full px-4 py-2 text-gray-700 border border-orange-100"
-                            >
-                              Skill {index + 1}
-                              {profile.skillEndorsements?.find(
-                                (se) => se.skillId === skillId
-                              )?.count > 0 &&
-                                ` (${profile.skillEndorsements.find(
-                                  (se) => se.skillId === skillId
-                                ).count
-                                })`}
-                            </div>
-                          ))
-                          : // If skills are stored as objects
-                          profile.skills.map((skill, index) => (
-                            <div
-                              key={index}
-                              className="bg-orange-50 rounded-full px-4 py-2 text-gray-700 border border-orange-100"
-                            >
-                              {skill.name}{" "}
-                              {skill.endorsements > 0 &&
-                                `(${skill.endorsements})`}
-                            </div>
-                          ))}
+                        {profile.skills.map((skill, index) => (
+                          <div
+                            key={index}
+                            className="bg-orange-50 rounded-full px-4 py-2 text-gray-700 border border-orange-100"
+                          >
+                            {skill.name?.charAt(0).toUpperCase() + skill.name?.slice(1)}{" "}
+                            {skill.endorsements > 0 && `(${skill.endorsements})`}
+                          </div>
+                        ))}
                       </div>
                     ) : (
                       <div className="text-center py-8 border rounded-lg bg-white">
@@ -1253,7 +1230,7 @@ const ProfilePage = () => {
                       </div>
                     )}
 
-                    {isCurrentUser && (
+                    {/* {isCurrentUser && (
                       <div className="mt-6 p-4 bg-orange-50 rounded-lg border border-orange-100">
                         <h3 className="text-lg font-semibold flex items-center">
                           <span className="mr-2">👩‍💻</span> Developer Skills
@@ -1265,7 +1242,7 @@ const ProfilePage = () => {
                           Edit Skills
                         </button>
                       </div>
-                    )}
+                    )} */}
                   </div>
                 )}
 
