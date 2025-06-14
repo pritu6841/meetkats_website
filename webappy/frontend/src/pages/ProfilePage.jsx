@@ -183,6 +183,91 @@ const ProfilePage = () => {
     });
   }, [loading, error, profile, isCurrentUser]);
 
+
+  //add experience
+  const [showExperienceForm, setShowExperienceForm] = useState(false);
+  const [newExperience, setNewExperience] = useState({
+    company: "",
+    position: "",
+    location: "",
+    startDate: "",
+    endDate: "",
+    current: false,
+    description: "",
+    skills: "",
+  });
+  const handleExperienceChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setNewExperience((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+  const handleAddExperience = async () => {
+    try {
+      const formattedExperience = {
+        ...newExperience,
+        skills: newExperience.skills
+          .split(",")
+          .map((skill) => skill.trim())
+          .filter((s) => s !== ""),
+      };
+
+      // Merge with existing experience
+      const updatedExperience = [
+        ...(profile.experience || []),
+        formattedExperience,
+      ];
+
+      // Prepare updated profile data
+      const updatedProfileData = {
+        ...profile, // copy existing fields
+        experience: updatedExperience,
+      };
+
+      // Call the userService to update profile (no image here)
+      const updatedUser = await userService.updateProfile(updatedProfileData);
+
+      // Update UI with new profile
+      setProfile(updatedUser);
+      setShowExperienceForm(false);
+
+      // Reset form
+      setNewExperience({
+        company: "",
+        position: "",
+        location: "",
+        startDate: "",
+        endDate: "",
+        current: false,
+        description: "",
+        skills: "",
+      });
+
+    } catch (err) {
+      console.error("Add experience error:", err);
+      alert("Failed to add experience. Please try again.");
+    }
+  };
+  const handleDeleteExperience = async (indexToRemove) => {
+    try {
+      const updatedExperience = profile.experience.filter(
+        (_, index) => index !== indexToRemove
+      );
+
+      const updatedProfileData = {
+        ...profile,
+        experience: updatedExperience,
+      };
+
+      const updatedUser = await userService.updateProfile(updatedProfileData);
+      setProfile(updatedUser);
+    } catch (err) {
+      console.error("Failed to delete experience:", err);
+      alert("Error deleting experience");
+    }
+  };
+
   // The edit route has been moved to a separate profile editor component
   // This is just a placeholder for the edit route
   if (location.pathname.endsWith("/edit")) {
@@ -399,8 +484,8 @@ const ProfilePage = () => {
                       {profile.location.address ||
                         (profile.location.coordinates
                           ? `${profile.location.coordinates[1].toFixed(
-                              2
-                            )}, ${profile.location.coordinates[0].toFixed(2)}`
+                            2
+                          )}, ${profile.location.coordinates[0].toFixed(2)}`
                           : "Location available")}
                     </p>
                   )}
@@ -495,61 +580,55 @@ const ProfilePage = () => {
                 <nav className="flex -mb-px overflow-x-auto">
                   <button
                     onClick={() => setActiveTab("about")}
-                    className={`px-6 py-4 text-sm font-medium whitespace-nowrap ${
-                      activeTab === "about"
-                        ? "border-b-2 border-orange-500 text-orange-600"
-                        : "text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                    }`}
+                    className={`px-6 py-4 text-sm font-medium whitespace-nowrap ${activeTab === "about"
+                      ? "border-b-2 border-orange-500 text-orange-600"
+                      : "text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                      }`}
                   >
                     About
                   </button>
                   <button
                     onClick={() => setActiveTab("experience")}
-                    className={`px-6 py-4 text-sm font-medium whitespace-nowrap ${
-                      activeTab === "experience"
-                        ? "border-b-2 border-orange-500 text-orange-600"
-                        : "text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                    }`}
+                    className={`px-6 py-4 text-sm font-medium whitespace-nowrap ${activeTab === "experience"
+                      ? "border-b-2 border-orange-500 text-orange-600"
+                      : "text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                      }`}
                   >
                     Experience
                   </button>
                   <button
                     onClick={() => setActiveTab("education")}
-                    className={`px-6 py-4 text-sm font-medium whitespace-nowrap ${
-                      activeTab === "education"
-                        ? "border-b-2 border-orange-500 text-orange-600"
-                        : "text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                    }`}
+                    className={`px-6 py-4 text-sm font-medium whitespace-nowrap ${activeTab === "education"
+                      ? "border-b-2 border-orange-500 text-orange-600"
+                      : "text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                      }`}
                   >
                     Education
                   </button>
                   <button
                     onClick={() => setActiveTab("skills")}
-                    className={`px-6 py-4 text-sm font-medium whitespace-nowrap ${
-                      activeTab === "skills"
-                        ? "border-b-2 border-orange-500 text-orange-600"
-                        : "text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                    }`}
+                    className={`px-6 py-4 text-sm font-medium whitespace-nowrap ${activeTab === "skills"
+                      ? "border-b-2 border-orange-500 text-orange-600"
+                      : "text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                      }`}
                   >
                     Skills
                   </button>
                   <button
                     onClick={() => setActiveTab("portfolio")}
-                    className={`px-6 py-4 text-sm font-medium whitespace-nowrap ${
-                      activeTab === "portfolio"
-                        ? "border-b-2 border-orange-500 text-orange-600"
-                        : "text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                    }`}
+                    className={`px-6 py-4 text-sm font-medium whitespace-nowrap ${activeTab === "portfolio"
+                      ? "border-b-2 border-orange-500 text-orange-600"
+                      : "text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                      }`}
                   >
                     Portfolio
                   </button>
                   <button
                     onClick={() => setActiveTab("recommendations")}
-                    className={`px-6 py-4 text-sm font-medium whitespace-nowrap ${
-                      activeTab === "recommendations"
-                        ? "border-b-2 border-orange-500 text-orange-600"
-                        : "text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                    }`}
+                    className={`px-6 py-4 text-sm font-medium whitespace-nowrap ${activeTab === "recommendations"
+                      ? "border-b-2 border-orange-500 text-orange-600"
+                      : "text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                      }`}
                   >
                     Recommendations
                   </button>
@@ -721,11 +800,98 @@ const ProfilePage = () => {
                         Work Experience
                       </h2>
                       {isCurrentUser && (
-                        <button className="px-4 py-2 bg-orange-500 text-white text-sm rounded-lg hover:bg-orange-600 transition">
+                        <button
+                          onClick={() => setShowExperienceForm((prev) => !prev)}
+                          className="px-4 py-2 bg-orange-500 text-white text-sm rounded-lg hover:bg-orange-600 transition"
+                        >
                           Add Experience
                         </button>
                       )}
                     </div>
+                    {showExperienceForm && (
+                      <div className="space-y-4 bg-gray-100 p-4 rounded-lg mb-4">
+                        <input
+                          type="text"
+                          name="company"
+                          placeholder="Company"
+                          value={newExperience.company}
+                          onChange={handleExperienceChange}
+                          className="w-full border rounded px-3 py-2"
+                          required
+                        />
+                        <input
+                          type="text"
+                          name="position"
+                          placeholder="Position"
+                          value={newExperience.position}
+                          onChange={handleExperienceChange}
+                          required
+                          className="w-full border rounded px-3 py-2"
+                        />
+                        <input
+                          type="text"
+                          name="location"
+                          placeholder="Location"
+                          value={newExperience.location}
+                          onChange={handleExperienceChange}
+                          className="w-full border rounded px-3 py-2"
+                        />
+                        <input
+                          type="date"
+                          name="startDate"
+                          value={newExperience.startDate}
+                          onChange={handleExperienceChange}
+                          max={new Date().toISOString().split("T")[0]} // restrict future dates
+                          className="w-full border rounded px-3 py-2"
+                        />
+                        <input
+                          type="date"
+                          name="endDate"
+                          value={newExperience.endDate}
+                          onChange={handleExperienceChange}
+                          disabled={newExperience.current}
+                          className="w-full border rounded px-3 py-2"
+                        />
+                        <label className="flex items-center space-x-2">
+                          <input
+                            type="checkbox"
+                            name="current"
+                            checked={newExperience.current}
+                            onChange={handleExperienceChange}
+                          />
+                          <span>Currently Working</span>
+                        </label>
+                        <textarea
+                          name="description"
+                          placeholder="Description"
+                          value={newExperience.description}
+                          onChange={handleExperienceChange}
+                          className="w-full border rounded px-3 py-2"
+                        ></textarea>
+                        <input
+                          type="text"
+                          name="skills"
+                          placeholder="Skills (comma separated)"
+                          value={newExperience.skills}
+                          onChange={handleExperienceChange}
+                          className="w-full border rounded px-3 py-2"
+                        />
+                        <div className="flex gap-3">
+                          <button
+                            onClick={handleAddExperience}
+                            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                          >
+                            Save
+                          </button>
+                          <button
+                            onClick={() => setShowExperienceForm(false)}
+                            className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    )}
 
                     {profile.experience?.length > 0 ? (
                       <div className="space-y-6">
@@ -766,19 +932,28 @@ const ProfilePage = () => {
                                   {experience.current
                                     ? "Present"
                                     : experience.endDate
-                                    ? new Date(
+                                      ? new Date(
                                         experience.endDate
                                       ).toLocaleDateString("en-US", {
                                         month: "short",
                                         year: "numeric",
                                       })
-                                    : "No end date"}
+                                      : "No end date"}
                                 </p>
                                 <p className="mt-2 text-gray-700">
                                   {experience.description}
                                 </p>
                               </div>
                             </div>
+                            {isCurrentUser && showExperienceForm && (
+                              <button
+                                onClick={() => handleDeleteExperience(index)}
+                                className="text-red-500 text-sm hover:underline"
+                              >
+                                Delete
+                              </button>
+                            )}
+
                           </div>
                         ))}
                       </div>
@@ -829,21 +1004,21 @@ const ProfilePage = () => {
                                   <FaCalendarAlt className="mr-1" />
                                   {education.startDate
                                     ? new Date(
-                                        education.startDate
-                                      ).toLocaleDateString("en-US", {
-                                        year: "numeric",
-                                      })
+                                      education.startDate
+                                    ).toLocaleDateString("en-US", {
+                                      year: "numeric",
+                                    })
                                     : "No start date"}{" "}
                                   -{" "}
                                   {education.current
                                     ? "Present"
                                     : education.endDate
-                                    ? new Date(
+                                      ? new Date(
                                         education.endDate
                                       ).toLocaleDateString("en-US", {
                                         year: "numeric",
                                       })
-                                    : "No end date"}
+                                      : "No end date"}
                                 </p>
                               </div>
                             </div>
@@ -890,33 +1065,32 @@ const ProfilePage = () => {
                       <div className="flex flex-wrap gap-2">
                         {typeof profile.skills[0] === "string"
                           ? // If skills are stored as IDs/strings
-                            profile.skills.map((skillId, index) => (
-                              <div
-                                key={index}
-                                className="bg-orange-50 rounded-full px-4 py-2 text-gray-700 border border-orange-100"
-                              >
-                                Skill {index + 1}
-                                {profile.skillEndorsements?.find(
+                          profile.skills.map((skillId, index) => (
+                            <div
+                              key={index}
+                              className="bg-orange-50 rounded-full px-4 py-2 text-gray-700 border border-orange-100"
+                            >
+                              Skill {index + 1}
+                              {profile.skillEndorsements?.find(
+                                (se) => se.skillId === skillId
+                              )?.count > 0 &&
+                                ` (${profile.skillEndorsements.find(
                                   (se) => se.skillId === skillId
-                                )?.count > 0 &&
-                                  ` (${
-                                    profile.skillEndorsements.find(
-                                      (se) => se.skillId === skillId
-                                    ).count
-                                  })`}
-                              </div>
-                            ))
+                                ).count
+                                })`}
+                            </div>
+                          ))
                           : // If skills are stored as objects
-                            profile.skills.map((skill, index) => (
-                              <div
-                                key={index}
-                                className="bg-orange-50 rounded-full px-4 py-2 text-gray-700 border border-orange-100"
-                              >
-                                {skill.name}{" "}
-                                {skill.endorsements > 0 &&
-                                  `(${skill.endorsements})`}
-                              </div>
-                            ))}
+                          profile.skills.map((skill, index) => (
+                            <div
+                              key={index}
+                              className="bg-orange-50 rounded-full px-4 py-2 text-gray-700 border border-orange-100"
+                            >
+                              {skill.name}{" "}
+                              {skill.endorsements > 0 &&
+                                `(${skill.endorsements})`}
+                            </div>
+                          ))}
                       </div>
                     ) : (
                       <div className="text-center py-8 border rounded-lg bg-white">
@@ -995,9 +1169,8 @@ const ProfilePage = () => {
                                 {project.description}
                               </p>
                               <Link
-                                to={`/portfolio/projects/${
-                                  project.id || project._id
-                                }`}
+                                to={`/portfolio/projects/${project.id || project._id
+                                  }`}
                                 className="mt-3 inline-block text-orange-600 hover:underline"
                               >
                                 View Project
