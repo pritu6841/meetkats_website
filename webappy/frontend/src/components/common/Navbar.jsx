@@ -190,7 +190,7 @@ const Sidebar = ({ user = {}, onLogout }) => {
       ),
     },
     {
-      name: "My Network",
+      name: "Network",
       href: "/network",
       icon: (
         <svg
@@ -210,8 +210,8 @@ const Sidebar = ({ user = {}, onLogout }) => {
       ),
     },
     {
-      name: "Portfolio",
-      href: "/portfolio",
+      name: "Discover",
+      href: "/discover",
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -224,15 +224,30 @@ const Sidebar = ({ user = {}, onLogout }) => {
             strokeLinecap="round"
             strokeLinejoin="round"
             strokeWidth={2}
-            d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
           />
         </svg>
       ),
     },
     {
-      name: "Chats",
-      href: "/chat",
-      icon: <img src={img1 || "/placeholder.svg"} alt="" className="h-5 w-5" />,
+      name: "Events",
+      href: "/events",
+      icon: (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+          />
+        </svg>
+      ),
     },
   ];
 
@@ -242,45 +257,26 @@ const Sidebar = ({ user = {}, onLogout }) => {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-100 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            {/* Left Section - Logo */}
-            <div className="flex items-center">
+            {/* Left Section - Logo & Search */}
+            <div className="flex items-center space-x-6">
               <Link
                 to="/dashboard"
                 className="flex items-center space-x-3 group"
               >
-                <div className="h-8 w-8 rounded-md  justify-center shadow-md group-hover:shadow-lg transition-all duration-200">
+                <div className="h-8 w-8 rounded-md justify-center shadow-md group-hover:shadow-lg transition-all duration-200">
                   <img
                     src={img || "/placeholder.svg"}
                     alt=""
-                    className="h-8 w-8 "
+                    className="h-8 w-8"
                   />
                 </div>
                 <span className="text-lg font-semibold text-gray-900 hidden sm:block">
                   Meetkats
                 </span>
               </Link>
-            </div>
 
-            {/* Center Section - Navigation & Search */}
-            <div className="hidden lg:flex items-center space-x-6">
-              {/* Navigation Links */}
-              <div className="flex items-center space-x-1">
-                {navItems.map((item) => (
-                  <Link
-                    key={item.name}
-                    to={item.href}
-                    className="flex items-center space-x-2 px-3 py-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200 group"
-                  >
-                    {/* <span className="group-hover:scale-105 transition-transform duration-200">
-                      {item.icon}
-                    </span> */}
-                    <span className="text-sm font-medium">{item.name}</span>
-                  </Link>
-                ))}
-              </div>
-
-              {/* Search Bar */}
-              <div className="relative">
+              {/* Search Bar - Moved to left */}
+              <div className="hidden lg:block">
                 <form onSubmit={handleSearch} className="w-full">
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -303,7 +299,7 @@ const Sidebar = ({ user = {}, onLogout }) => {
                       type="search"
                       name="search"
                       id="search"
-                      className="w-72 bg-gray-50 border border-gray-200 rounded-lg py-2 pl-10 pr-4 text-sm placeholder-gray-400 focus:outline-none focus:bg-white focus:border-blue-300 focus:ring-2 focus:ring-blue-100 transition-all duration-200"
+                      className="w-80 bg-gray-50 border border-gray-200 rounded-lg py-2 pl-10 pr-4 text-sm placeholder-gray-400 focus:outline-none focus:bg-white focus:border-blue-300 focus:ring-2 focus:ring-blue-100 transition-all duration-200"
                       placeholder="Search people, posts, companies..."
                       onFocus={() => setSearchFocused(true)}
                       onBlur={() => setSearchFocused(false)}
@@ -313,8 +309,21 @@ const Sidebar = ({ user = {}, onLogout }) => {
               </div>
             </div>
 
+            {/* Center Section - Navigation Links */}
+            <div className="hidden lg:flex items-center space-x-6 ml-auto mr-8">
+              {navItems.map((item) => (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className="flex items-center space-x-2 px-4 py-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200 group"
+                >
+                  <span className="text-sm font-medium">{item.name}</span>
+                </Link>
+              ))}
+            </div>
+
             {/* Right Section - Actions & Profile */}
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-4">
               {/* Notifications Dropdown */}
               <div ref={notificationsRef} className="relative hidden lg:block">
                 <button
