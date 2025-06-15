@@ -115,6 +115,7 @@ const CreateTicketsPage = () => {
     ]);
   };
 
+  
   // Remove a ticket type form
   const removeTicketType = (index) => {
     if (ticketTypes.length <= 1) {
