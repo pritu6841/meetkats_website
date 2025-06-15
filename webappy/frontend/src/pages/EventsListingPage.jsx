@@ -584,13 +584,6 @@ const EventListingPage = ({ user, onLogout }) => {
               </footer>
             </>
           )}
-
-          {/* Create Event Button - Fixed at bottom right */}
-          <Link to="/events/new" className="fixed bottom-8 right-8">
-            <button className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-full p-4 shadow-lg hover:shadow-xl flex items-center justify-center transition-all duration-300 transform hover:scale-110 cursor-pointer">
-              <PlusCircle className="h-6 w-6" />
-            </button>
-          </Link>
         </div>
       </div>
     </div>
