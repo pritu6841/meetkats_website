@@ -54,6 +54,7 @@ import CheckInPage from './pages/CheckInPage';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import CustomFormCreatorPage from './pages/CustomFormCreatorPage';
 import CustomFormSubmissionPage from './pages/CustomFormSubmissionPage';
+import ResetPasswordPage from './pages/ResetPassword';
 import CustomFormSubmissionsPage from './pages/CustomFormSubmissionsPage';
 import TermsAndConditions from './pages/TermsAndConditions';
 import Refundpolicy from './pages/RefundPolicy';
@@ -97,6 +98,7 @@ const App = () => {
           <Route path="/landingpage" element={<BhoomiLandingPage />} />
           <Route path="/login" element={<AuthPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="/signup" element={<AuthPage type="signup" />} />
           <Route path="/phone-login" element={<AuthPage type="phone-login" />} />
           <Route path="/auth/callback" element={<AuthPage />} />

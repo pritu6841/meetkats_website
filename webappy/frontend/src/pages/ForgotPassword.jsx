@@ -28,13 +28,16 @@ export default function ForgotPasswordPage() {
       const response = await api.post(`/auth/forgot-password`, {
         email: email
       });
-
+      
+      console.log("Response from forgot password API:", response.data);
       if (response.data.success) {
         setIsLoading(false);
         setIsSubmitted(true);
       }
     } catch (err) {
+      // setIsLoading(false);
       setIsLoading(false);
+      setIsSubmitted(true);
       setError(err.response?.data?.message || "Something went wrong. Please try again.");
     }
   };
@@ -43,7 +46,7 @@ export default function ForgotPasswordPage() {
     setIsLoading(true);
     
     try {
-      const response = await axios.post(`${API_URL}/auth/forgot-password`, {
+      const response = await api.post(`/auth/forgot-password`, {
         email: email
       });
 
@@ -136,7 +139,7 @@ export default function ForgotPasswordPage() {
               <div className="text-center pt-4">
                 <button 
                   onClick={handleBackToLogin}
-                  className="inline-flex items-center text-green-600 hover:text-green-700 font-medium transition-colors duration-200 group"
+                  className="cursor-pointer inline-flex items-center text-green-600 hover:text-green-700 font-medium transition-colors duration-200 group"
                 >
                   <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform duration-200" />
                   Back to Login
