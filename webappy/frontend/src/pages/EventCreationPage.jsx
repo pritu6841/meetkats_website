@@ -306,7 +306,7 @@ const EventCreationPage = ({ user, onLogout }) => {
     switch (activeStep) {
       case 1:
         return (
-          <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <div className="bg-white rounded-lg border border-gray-200 p-6 ">
             <div className="mb-6">
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Event Title <span className="text-green-500">*</span>
@@ -400,7 +400,7 @@ const EventCreationPage = ({ user, onLogout }) => {
 
       case 2:
         return (
-          <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <div className="bg-white rounded-lg border border-gray-200 p-6 ">
             <h3 className="text-lg font-medium text-gray-900 mb-4">
               When is your event?
             </h3>
@@ -467,7 +467,7 @@ const EventCreationPage = ({ user, onLogout }) => {
 
       case 3:
         return (
-          <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <div className="bg-white rounded-lg border border-gray-200 p-6  ">
             <h3 className="text-lg font-medium text-gray-900 mb-4">
               Where is your event?
             </h3>
@@ -613,7 +613,7 @@ const EventCreationPage = ({ user, onLogout }) => {
 
       case 4:
         return (
-          <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <div className="bg-white rounded-lg border border-gray-200 p-6 ">
             <h3 className="text-lg font-medium text-gray-900 mb-4">
               Event Image & Settings
             </h3>
@@ -807,7 +807,7 @@ const EventCreationPage = ({ user, onLogout }) => {
     return (
       <div className="flex h-screen">
         {/* Integrate the existing Sidebar */}
-        <Sidebar user={user || {}} onLogout={onLogout} />
+        {/* <Sidebar user={user || {}} onLogout={onLogout} /> */}
 
         {/* Main content with no gap */}
         <div className="flex-1 overflow-y-auto">
@@ -827,10 +827,9 @@ const EventCreationPage = ({ user, onLogout }) => {
                   className="px-6 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700"
                   onClick={() =>
                     navigate(
-                      `/events/${
-                        createdEventResponse?.data?._id ||
-                        createdEventResponse?.data?.id ||
-                        "new"
+                      `/events/${createdEventResponse?.data?._id ||
+                      createdEventResponse?.data?.id ||
+                      "new"
                       }`
                     )
                   }
@@ -854,9 +853,9 @@ const EventCreationPage = ({ user, onLogout }) => {
   return (
     <div className="flex">
       {/* The sidebar component - moved higher in the z-index stack */}
-      <div className="z-20 relative">
+      {/* <div className="z-20 relative">
         <Sidebar user={user || {}} onLogout={onLogout} />
-      </div>
+      </div> */}
 
       {/* Main content */}
       <div className="flex-1 overflow-y-auto">
@@ -887,13 +886,13 @@ const EventCreationPage = ({ user, onLogout }) => {
 
           {/* Step Indicators */}
           <div className="px-4 pb-4">
-            <div className="flex justify-between">
+            <div className="flex flex-col sm:flex-row lg:justify-between gap-4">
+
               {formSteps.map((step, index) => (
                 <div
                   key={step.id}
-                  className={`flex items-center ${
-                    index < formSteps.length - 1 ? "flex-1" : ""
-                  }`}
+                  className={`flex items-center ${index < formSteps.length - 1 ? "flex-1" : ""
+                    }`}
                   onClick={() =>
                     step.id <= activeStep ? setActiveStep(step.id) : null
                   }
@@ -902,13 +901,12 @@ const EventCreationPage = ({ user, onLogout }) => {
                   }}
                 >
                   <div
-                    className={`flex items-center justify-center w-8 h-8 rounded-full ${
-                      activeStep === step.id
+                    className={`flex items-center justify-center w-8 h-8 rounded-full ${activeStep === step.id
                         ? "bg-green-500 text-white"
                         : activeStep > step.id
-                        ? "bg-green-100 text-green-500 border border-green-500"
-                        : "bg-gray-100 text-gray-400"
-                    }`}
+                          ? "bg-green-100 text-green-500 border border-green-500"
+                          : "bg-gray-100 text-gray-400"
+                      }`}
                   >
                     {activeStep > step.id ? (
                       <svg
@@ -929,24 +927,23 @@ const EventCreationPage = ({ user, onLogout }) => {
                   </div>
 
                   <span
-                    className={`ml-2 text-sm font-medium ${
-                      activeStep === step.id
+                    className={`ml-2 text-sm font-medium ${activeStep === step.id
                         ? "text-gray-900"
                         : activeStep > step.id
-                        ? "text-green-500"
-                        : "text-gray-400"
-                    }`}
+                          ? "text-green-500"
+                          : "text-gray-400"
+                      }`}
                   >
                     {step.name}
                   </span>
 
                   {index < formSteps.length - 1 && (
                     <div
-                      className={`h-0.5 flex-1 mx-3 ${
-                        activeStep > step.id ? "bg-green-500" : "bg-gray-200"
-                      }`}
+                      className={`hidden sm:block h-0.5 flex-1 mx-3 ${activeStep > step.id ? "bg-green-500" : "bg-gray-200"
+                        }`}
                     ></div>
                   )}
+
                 </div>
               ))}
             </div>
@@ -957,7 +954,7 @@ const EventCreationPage = ({ user, onLogout }) => {
         <div className="max-w-4xl mx-auto px-4 py-6">
           {/* Error message */}
           {error && (
-            <div className="mb-4 bg-red-50 border-l-4 border-green-500 p-4 rounded-md">
+            <div className="mb-4 bg-red-50 border-l-4 border-green-500 p-4 rounded-md ">
               <div className="flex">
                 <AlertCircle className="h-5 w-5 text-green-500" />
                 <div className="ml-3">
@@ -982,9 +979,8 @@ const EventCreationPage = ({ user, onLogout }) => {
                 type="button"
                 onClick={prevStep}
                 disabled={activeStep === 1}
-                className={`px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 ${
-                  activeStep === 1 ? "opacity-50 cursor-not-allowed" : ""
-                }`}
+                className={`px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 ${activeStep === 1 ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
               >
                 Previous
               </button>
@@ -1001,9 +997,8 @@ const EventCreationPage = ({ user, onLogout }) => {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className={`px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 ${
-                    submitting ? "opacity-75 cursor-not-allowed" : ""
-                  }`}
+                  className={`px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 ${submitting ? "opacity-75 cursor-not-allowed" : ""
+                    }`}
                 >
                   {submitting ? "Creating..." : "Create Event"}
                 </button>
