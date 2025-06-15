@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 import eventService from "../services/eventService";
 import Sidebar from "../components/common/Navbar";
-import CustomFieldsSection from "../components/common/CustomFieldsSection"; // Import the new component
+// import CustomFieldsSection from "../components/common/CustomFieldsSection"; // Import the new component
 
 const EventCreationPage = ({ user, onLogout }) => {
   const navigate = useNavigate();
@@ -52,7 +52,7 @@ const EventCreationPage = ({ user, onLogout }) => {
     maxAttendees: "",
     isPrivate: false,
     requireApproval: false,
-    customFields: [], // Add customFields to the form state
+    // customFields: [], // Add customFields to the form state
   });
 
   // UI state
@@ -69,8 +69,8 @@ const EventCreationPage = ({ user, onLogout }) => {
     { id: 2, name: "Date & Time" },
     { id: 3, name: "Location" },
     { id: 4, name: "Image & Settings" },
-    { id: 5, name: "Custom Fields" },
-    { id: 6, name: "Tickets" }, // New step for tickets
+    // { id: 5, name: "Custom Fields" },
+    { id: 5, name: "Tickets" }, // New step for tickets
   ];
 
   // Handle standard input changes
@@ -104,12 +104,12 @@ const EventCreationPage = ({ user, onLogout }) => {
   };
 
   // Handle custom fields changes
-  const handleCustomFieldsChange = (customFields) => {
-    setFormData((prev) => ({
-      ...prev,
-      customFields,
-    }));
-  };
+  // const handleCustomFieldsChange = (customFields) => {
+  //   setFormData((prev) => ({
+  //     ...prev,
+  //     customFields,
+  //   }));
+  // };
 
   // Handle cover image upload
   const handleImageUpload = (e) => {
@@ -281,7 +281,7 @@ const EventCreationPage = ({ user, onLogout }) => {
           : null,
         isPrivate: formData.isPrivate,
         requireApproval: formData.requireApproval,
-        customFields: formData.customFields,
+        // customFields: formData.customFields,
       };
 
       console.log("Submitting event data:", eventData);
@@ -349,7 +349,7 @@ const EventCreationPage = ({ user, onLogout }) => {
                 value={formData.description}
                 onChange={handleInputChange}
                 rows={5}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 resize-none focus:ring-green-500 focus:border-green-500"
                 placeholder="Describe your event, what attendees can expect, etc."
               ></textarea>
               <p className="mt-1 text-sm text-green-500">
@@ -735,60 +735,60 @@ const EventCreationPage = ({ user, onLogout }) => {
           </div>
         );
 
+      // case 5:
+      //   return (
+      //     <div className="bg-white rounded-lg border border-gray-200 p-6">
+      //       <h3 className="text-lg font-medium text-gray-900 mb-4">
+      //         Custom Registration Fields
+      //       </h3>
+      //       <p className="text-gray-600 mb-6">
+      //         Add custom fields to collect additional information from attendees
+      //         during registration.
+      //       </p>
+
+      //       {/* Use the CustomFieldsSection component */}
+      //       <CustomFieldsSection
+      //         customFields={formData.customFields}
+      //         onChange={handleCustomFieldsChange}
+      //       />
+
+      //       <div className="mt-6 border border-green-100 bg-green-50 rounded-lg p-4">
+      //         <h4 className="font-medium text-green-800 mb-3">
+      //           Example Custom Fields
+      //         </h4>
+
+      //         <div className="flex items-start mb-3">
+      //           <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-1">
+      //             <Info className="h-4 w-4 text-green-600" />
+      //           </div>
+      //           <div className="ml-3">
+      //             <h4 className="font-medium text-gray-800">
+      //               Dietary Restrictions
+      //             </h4>
+      //             <p className="text-sm text-gray-600">
+      //               For events with meals or refreshments
+      //             </p>
+      //           </div>
+      //         </div>
+
+      //         <div className="flex items-start">
+      //           <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-1">
+      //             <Users className="h-4 w-4 text-green-600" />
+      //           </div>
+      //           <div className="ml-3">
+      //             <h4 className="font-medium text-gray-800">
+      //               Company or Organization
+      //             </h4>
+      //             <p className="text-sm text-gray-600">
+      //               For networking events or business gatherings
+      //             </p>
+      //           </div>
+      //         </div>
+      //       </div>
+      //     </div>
+      //   );
+
       case 5:
-        return (
-          <div className="bg-white rounded-lg border border-gray-200 p-6">
-            <h3 className="text-lg font-medium text-gray-900 mb-4">
-              Custom Registration Fields
-            </h3>
-            <p className="text-gray-600 mb-6">
-              Add custom fields to collect additional information from attendees
-              during registration.
-            </p>
-
-            {/* Use the CustomFieldsSection component */}
-            <CustomFieldsSection
-              customFields={formData.customFields}
-              onChange={handleCustomFieldsChange}
-            />
-
-            <div className="mt-6 border border-green-100 bg-green-50 rounded-lg p-4">
-              <h4 className="font-medium text-green-800 mb-3">
-                Example Custom Fields
-              </h4>
-
-              <div className="flex items-start mb-3">
-                <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-1">
-                  <Info className="h-4 w-4 text-green-600" />
-                </div>
-                <div className="ml-3">
-                  <h4 className="font-medium text-gray-800">
-                    Dietary Restrictions
-                  </h4>
-                  <p className="text-sm text-gray-600">
-                    For events with meals or refreshments
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start">
-                <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-1">
-                  <Users className="h-4 w-4 text-green-600" />
-                </div>
-                <div className="ml-3">
-                  <h4 className="font-medium text-gray-800">
-                    Company or Organization
-                  </h4>
-                  <p className="text-sm text-gray-600">
-                    For networking events or business gatherings
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 6:
         return (
           <div className="bg-white rounded-lg border border-gray-200 p-6">
             <h3 className="text-lg font-medium text-gray-900 mb-4">
