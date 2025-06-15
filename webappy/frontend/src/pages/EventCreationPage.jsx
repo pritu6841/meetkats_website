@@ -254,6 +254,7 @@ const EventCreationPage = ({ user, onLogout }) => {
 
     try {
       setSubmitting(true);
+      setError(null);
 
       // Prepare data for API
       const eventData = {
@@ -283,16 +284,33 @@ const EventCreationPage = ({ user, onLogout }) => {
         customFields: formData.customFields,
       };
 
+      console.log("Submitting event data:", eventData);
+
       // Call API to create event
       const response = await eventService.createEvent(eventData);
+      console.log("Event creation response:", response);
+
+      if (!response.success) {
+        throw new Error(response.error || "Failed to create event");
+      }
+
+      if (!response.data) {
+        throw new Error("No data received from server");
+      }
 
       // Store response data
       setCreatedEventResponse(response);
 
-      // Navigate to the ticket creation page immediately
-      navigate(
-        `/events/${response.data._id || response.data.id}/tickets/create`
-      );
+      // Get the event ID from the response
+      const eventId = response.data._id || response.data.id;
+
+      if (!eventId) {
+        console.error("Event ID not found in response:", response.data);
+        throw new Error("Event ID not found in server response");
+      }
+
+      // Navigate to the ticket creation page
+      navigate(`/events/${eventId}/tickets/create`);
     } catch (err) {
       console.error("Error creating event:", err);
       setError(
@@ -827,9 +845,10 @@ const EventCreationPage = ({ user, onLogout }) => {
                   className="px-6 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700"
                   onClick={() =>
                     navigate(
-                      `/events/${createdEventResponse?.data?._id ||
-                      createdEventResponse?.data?.id ||
-                      "new"
+                      `/events/${
+                        createdEventResponse?.data?._id ||
+                        createdEventResponse?.data?.id ||
+                        "new"
                       }`
                     )
                   }
@@ -887,12 +906,12 @@ const EventCreationPage = ({ user, onLogout }) => {
           {/* Step Indicators */}
           <div className="px-4 pb-4">
             <div className="flex flex-col sm:flex-row lg:justify-between gap-4">
-
               {formSteps.map((step, index) => (
                 <div
                   key={step.id}
-                  className={`flex items-center ${index < formSteps.length - 1 ? "flex-1" : ""
-                    }`}
+                  className={`flex items-center ${
+                    index < formSteps.length - 1 ? "flex-1" : ""
+                  }`}
                   onClick={() =>
                     step.id <= activeStep ? setActiveStep(step.id) : null
                   }
@@ -901,12 +920,13 @@ const EventCreationPage = ({ user, onLogout }) => {
                   }}
                 >
                   <div
-                    className={`flex items-center justify-center w-8 h-8 rounded-full ${activeStep === step.id
+                    className={`flex items-center justify-center w-8 h-8 rounded-full ${
+                      activeStep === step.id
                         ? "bg-green-500 text-white"
                         : activeStep > step.id
-                          ? "bg-green-100 text-green-500 border border-green-500"
-                          : "bg-gray-100 text-gray-400"
-                      }`}
+                        ? "bg-green-100 text-green-500 border border-green-500"
+                        : "bg-gray-100 text-gray-400"
+                    }`}
                   >
                     {activeStep > step.id ? (
                       <svg
@@ -927,23 +947,24 @@ const EventCreationPage = ({ user, onLogout }) => {
                   </div>
 
                   <span
-                    className={`ml-2 text-sm font-medium ${activeStep === step.id
+                    className={`ml-2 text-sm font-medium ${
+                      activeStep === step.id
                         ? "text-gray-900"
                         : activeStep > step.id
-                          ? "text-green-500"
-                          : "text-gray-400"
-                      }`}
+                        ? "text-green-500"
+                        : "text-gray-400"
+                    }`}
                   >
                     {step.name}
                   </span>
 
                   {index < formSteps.length - 1 && (
                     <div
-                      className={`hidden sm:block h-0.5 flex-1 mx-3 ${activeStep > step.id ? "bg-green-500" : "bg-gray-200"
-                        }`}
+                      className={`hidden sm:block h-0.5 flex-1 mx-3 ${
+                        activeStep > step.id ? "bg-green-500" : "bg-gray-200"
+                      }`}
                     ></div>
                   )}
-
                 </div>
               ))}
             </div>
@@ -979,8 +1000,9 @@ const EventCreationPage = ({ user, onLogout }) => {
                 type="button"
                 onClick={prevStep}
                 disabled={activeStep === 1}
-                className={`px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 ${activeStep === 1 ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
+                className={`px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 ${
+                  activeStep === 1 ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               >
                 Previous
               </button>
@@ -997,8 +1019,9 @@ const EventCreationPage = ({ user, onLogout }) => {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className={`px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 ${submitting ? "opacity-75 cursor-not-allowed" : ""
-                    }`}
+                  className={`px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 ${
+                    submitting ? "opacity-75 cursor-not-allowed" : ""
+                  }`}
                 >
                   {submitting ? "Creating..." : "Create Event"}
                 </button>
