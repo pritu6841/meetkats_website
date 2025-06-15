@@ -194,6 +194,7 @@ const EventListingPage = ({ user, onLogout }) => {
   const [filter, setFilter] = useState("upcoming");
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("");
+  const [showAllEvents, setShowAllEvents] = useState(false);
   const [categories, setCategories] = useState([
     "All",
     "Business",
@@ -216,6 +217,9 @@ const EventListingPage = ({ user, onLogout }) => {
           apiFilters.filter = "upcoming";
         } else if (filter === "past") {
           apiFilters.filter = "past";
+        } else if (filter === "all") {
+          // No filter for all events
+          apiFilters.filter = "all";
         }
 
         if (categoryFilter && categoryFilter !== "All") {
@@ -239,7 +243,6 @@ const EventListingPage = ({ user, onLogout }) => {
         }
 
         const eventsData = response.events || response.data || [];
-
         setEvents(eventsData);
         setLoading(false);
       } catch (err) {
@@ -313,7 +316,7 @@ const EventListingPage = ({ user, onLogout }) => {
     }
   }, [featuredEvents.length]);
 
-  const EventSection = ({ title, events, showSeeAll = true }) => {
+  const EventSection = ({ title, events, showSeeAll = true, category }) => {
     if (!events || events.length === 0) return null;
 
     return (
@@ -321,8 +324,14 @@ const EventListingPage = ({ user, onLogout }) => {
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold text-gray-900">{title}</h2>
           {showSeeAll && (
-            <button className="text-blue-600 hover:text-blue-700 font-medium text-sm cursor-pointer">
-              See All →
+            <button
+              onClick={() => {
+                setCategoryFilter(category || "");
+                setShowAllEvents(true);
+              }}
+              className="text-blue-600 hover:text-blue-700 font-medium text-sm cursor-pointer flex items-center gap-1"
+            >
+              See All <ChevronRight className="w-4 h-4" />
             </button>
           )}
         </div>
@@ -467,7 +476,10 @@ const EventListingPage = ({ user, onLogout }) => {
                     ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg"
                     : "bg-white text-gray-700 border border-gray-200 hover:border-gray-300 hover:bg-gray-50"
                 } transition-all duration-200 font-medium cursor-pointer`}
-                onClick={() => setFilter("upcoming")}
+                onClick={() => {
+                  setFilter("upcoming");
+                  setShowAllEvents(false);
+                }}
               >
                 Upcoming
               </button>
@@ -477,7 +489,10 @@ const EventListingPage = ({ user, onLogout }) => {
                     ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg"
                     : "bg-white text-gray-700 border border-gray-200 hover:border-gray-300 hover:bg-gray-50"
                 } transition-all duration-200 font-medium cursor-pointer`}
-                onClick={() => setFilter("all")}
+                onClick={() => {
+                  setFilter("all");
+                  setShowAllEvents(false);
+                }}
               >
                 All Events
               </button>
@@ -487,7 +502,10 @@ const EventListingPage = ({ user, onLogout }) => {
                     ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg"
                     : "bg-white text-gray-700 border border-gray-200 hover:border-gray-300 hover:bg-gray-50"
                 } transition-all duration-200 font-medium cursor-pointer`}
-                onClick={() => setFilter("past")}
+                onClick={() => {
+                  setFilter("past");
+                  setShowAllEvents(false);
+                }}
               >
                 Past
               </button>
@@ -551,38 +569,37 @@ const EventListingPage = ({ user, onLogout }) => {
                 </button>
               )}
             </div>
+          ) : showAllEvents ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {filteredEvents.map((event) => (
+                <EventCard
+                  key={event._id || event.id || `event-${Math.random()}`}
+                  event={event}
+                />
+              ))}
+            </div>
           ) : (
             <>
               <EventSection
                 title="Recommended"
                 events={categorizedEvents.recommended}
+                category=""
               />
               <EventSection
                 title="Hackathons"
                 events={categorizedEvents.hackathons}
+                category="hackathon"
               />
               <EventSection
                 title="Network Events"
                 events={categorizedEvents.network}
+                category="network"
               />
               <EventSection
                 title="The best of live events"
                 events={categorizedEvents.live}
+                category="entertainment"
               />
-
-              {!categorizedEvents.recommended.length &&
-                !categorizedEvents.hackathons.length &&
-                !categorizedEvents.network.length &&
-                !categorizedEvents.live.length && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {filteredEvents.map((event) => (
-                      <EventCard
-                        key={event._id || event.id || `event-${Math.random()}`}
-                        event={event}
-                      />
-                    ))}
-                  </div>
-                )}
 
               {/* Category Cards */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16">

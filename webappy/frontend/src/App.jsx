@@ -9,7 +9,7 @@ import ForgotPasswordPage from './pages/ForgotPassword';
 import ChildAbuse from './pages/ChildAbuse';
 import Discover from './pages/DiscoverPage';
 import ProfileSetupPage from './pages/ProfileSetupPage';
-import Dashboard from './pages/Dashboard';
+import Dashboard from './pages/Dashboard/NewDashboard';
 import Robots from "./robots.txt"
 import ChatPage from './pages/ChatPage';
 import NearbyProfessionals from './pages/NetworkPage';
