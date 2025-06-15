@@ -69,7 +69,8 @@ const EventCreationPage = ({ user, onLogout }) => {
     { id: 2, name: "Date & Time" },
     { id: 3, name: "Location" },
     { id: 4, name: "Image & Settings" },
-    { id: 5, name: "Custom Fields" }, // New step for custom fields
+    { id: 5, name: "Custom Fields" },
+    { id: 6, name: "Tickets" }, // New step for tickets
   ];
 
   // Handle standard input changes
@@ -279,7 +280,7 @@ const EventCreationPage = ({ user, onLogout }) => {
           : null,
         isPrivate: formData.isPrivate,
         requireApproval: formData.requireApproval,
-        customFields: formData.customFields, // Include custom fields in API request
+        customFields: formData.customFields,
       };
 
       // Call API to create event
@@ -288,15 +289,10 @@ const EventCreationPage = ({ user, onLogout }) => {
       // Store response data
       setCreatedEventResponse(response);
 
-      // Set success state
-      setSuccess(true);
-
-      // Navigate to the new event page
-      setTimeout(() => {
-        navigate(
-          `/events/${response.data._id || response.data.id}/form/create`
-        );
-      }, 2000);
+      // Navigate to the ticket creation page immediately
+      navigate(
+        `/events/${response.data._id || response.data.id}/tickets/create`
+      );
     } catch (err) {
       console.error("Error creating event:", err);
       setError(
@@ -767,6 +763,34 @@ const EventCreationPage = ({ user, onLogout }) => {
                   <p className="text-sm text-gray-600">
                     For networking events or business gatherings
                   </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 6:
+        return (
+          <div className="bg-white rounded-lg border border-gray-200 p-6">
+            <h3 className="text-lg font-medium text-gray-900 mb-4">
+              Event Tickets
+            </h3>
+            <p className="text-gray-600 mb-6">Add tickets for your event.</p>
+
+            {/* Implementation of ticket creation form */}
+            {/* This is a placeholder and should be replaced with the actual ticket creation form */}
+            <div className="mt-6 border border-green-100 bg-green-50 rounded-lg p-4">
+              <h4 className="font-medium text-green-800 mb-3">
+                Example Ticket
+              </h4>
+
+              <div className="flex items-start">
+                <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-1">
+                  <Info className="h-4 w-4 text-green-600" />
+                </div>
+                <div className="ml-3">
+                  <h4 className="font-medium text-gray-800">Ticket Type</h4>
+                  <p className="text-sm text-gray-600">General Admission</p>
                 </div>
               </div>
             </div>
