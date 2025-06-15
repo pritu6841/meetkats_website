@@ -1239,7 +1239,7 @@ exports.forgotPassword = async (req, res) => {
       success: true
     });
     
-    res.json({ message: 'If a matching account is found, an email will be sent with password reset instructions' });
+    res.json({ message: 'If a matching account is found, an email will be sent with password reset instructions',success: true });
   } catch (error) {
     logger.error('Forgot password error:', error);
     res.status(500).json({ error: 'Server error during password reset request' });
@@ -1317,7 +1317,7 @@ exports.resetPassword = async (req, res) => {
       }
     });
     
-    res.json({ message: 'Password reset successful' });
+    res.json({ message: 'Password reset successful',success: true});
   } catch (error) {
     logger.error('Reset password error:', error);
     res.status(500).json({ error: 'Server error during password reset' });
