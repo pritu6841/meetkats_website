@@ -182,7 +182,9 @@ const App = () => {
           {/* Network Routes */}
           <Route path="/network" element={
             <ProtectedRoute>
-              <NetworkExplorePage />
+              <WithAuth>
+                {(user, logout) => <NetworkExplorePage user={user} onLogout={logout} />}
+              </WithAuth>
             </ProtectedRoute>
           } />
           <Route path="/childabuse" element={
@@ -288,7 +290,7 @@ const App = () => {
           {/* Event Management Routes */}
           <Route path="/events" element={
             <ProtectedRoute>
-              <EventListingPage/>
+              <EventListingPage />
             </ProtectedRoute>
           } />
           
