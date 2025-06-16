@@ -630,7 +630,7 @@ const MergedDashboard = () => {
                 <div className="flex justify-end">
                   <div className="flex gap-3">
                     <button
-                      onClick={() => setShowConnectionRequests(true)}
+                      onClick={() => window.location.href='/connections'}
                       className="w-[199px] h-[25px] bg-[#DE7373]/50 text-white rounded-full text-sm font-medium flex items-center justify-center hover:bg-[#DE7373]/60 transition-colors"
                     >
                       <span className="font-normal items-center cursor-pointer text-black">

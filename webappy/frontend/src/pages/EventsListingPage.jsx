@@ -12,6 +12,7 @@ import {
   PlusCircle,
 } from "lucide-react";
 import eventService from "../services/eventService";
+import { useAuth } from "../context/AuthContext";
 import { Link } from "react-router-dom";
 import Sidebar from "../components/common/Navbar";
 import { FooterBlock } from "./BhoomiLandingPage/sections/FooterBlock";
@@ -187,8 +188,9 @@ const CarouselCard = ({ event }) => {
   );
 };
 
-const EventListingPage = ({ user, onLogout }) => {
+const EventListingPage = () => {
   const [events, setEvents] = useState([]);
+  const { user, logout } = useAuth();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filter, setFilter] = useState("upcoming");
@@ -350,7 +352,7 @@ const EventListingPage = ({ user, onLogout }) => {
   return (
     <div className="flex h-screen">
       <div className="z-20 relative">
-        <Sidebar user={user || {}} onLogout={onLogout} />
+        <Sidebar user={user || {}} onLogout={logout} />
       </div>
 
       <div className="flex-1 overflow-y-auto bg-gray-50 mt-20 ">

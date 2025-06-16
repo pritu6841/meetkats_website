@@ -20,12 +20,12 @@ const NotFoundPage = () => {
 
   const handleGoHome = () => {
     console.log('Navigate to home page');
-    // window.location.href = '/';
+    window.location.href = '/';
   };
 
   const handleGoBack = () => {
     console.log('Go back to previous page');
-    // window.history.back();
+    window.history.back();
   };
 
   const handleRefresh = () => {
@@ -40,7 +40,7 @@ const NotFoundPage = () => {
     };
     
     console.log(`Opening ${platform}: ${socialLinks[platform]}`);
-    // window.open(socialLinks[platform], '_blank');
+    window.open(socialLinks[platform], '_blank');
   };
 
   // Floating elements animation
@@ -125,21 +125,21 @@ const NotFoundPage = () => {
               <div className="flex justify-center gap-4">
                 <button
                   onClick={() => handleSocialMedia('linkedin')}
-                  className="group flex items-center justify-center w-12 h-12 bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-xl transition-all duration-300 transform hover:scale-110 hover:rotate-6 shadow-md hover:shadow-lg"
+                  className="cursor-pointer group flex items-center justify-center w-12 h-12 bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-xl transition-all duration-300 transform hover:scale-110 hover:rotate-6 shadow-md hover:shadow-lg"
                 >
                   <Linkedin className="w-6 h-6 group-hover:scale-110 transition-transform duration-200" />
                 </button>
                 
                 <button
                   onClick={() => handleSocialMedia('instagram')}
-                  className="group flex items-center justify-center w-12 h-12 bg-pink-100 hover:bg-pink-200 text-pink-600 rounded-xl transition-all duration-300 transform hover:scale-110 hover:rotate-6 shadow-md hover:shadow-lg"
+                  className="cursor-pointer group flex items-center justify-center w-12 h-12 bg-pink-100 hover:bg-pink-200 text-pink-600 rounded-xl transition-all duration-300 transform hover:scale-110 hover:rotate-6 shadow-md hover:shadow-lg"
                 >
                   <Instagram className="w-6 h-6 group-hover:scale-110 transition-transform duration-200" />
                 </button>
                 
                 <button
                   onClick={() => handleSocialMedia('twitter')}
-                  className="group flex items-center justify-center w-12 h-12 bg-sky-100 hover:bg-sky-200 text-sky-600 rounded-xl transition-all duration-300 transform hover:scale-110 hover:rotate-6 shadow-md hover:shadow-lg"
+                  className="cursor-pointer group flex items-center justify-center w-12 h-12 bg-sky-100 hover:bg-sky-200 text-sky-600 rounded-xl transition-all duration-300 transform hover:scale-110 hover:rotate-6 shadow-md hover:shadow-lg"
                 >
                   <Twitter className="w-6 h-6 group-hover:scale-110 transition-transform duration-200" />
                 </button>
@@ -150,7 +150,7 @@ const NotFoundPage = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <button
                 onClick={handleGoHome}
-                className="group flex items-center gap-3 bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold px-8 py-3 rounded-xl hover:from-green-600 hover:to-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg"
+                className="cursor-pointer group flex items-center gap-3 bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold px-8 py-3 rounded-xl hover:from-green-600 hover:to-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg"
               >
                 <Home className="w-5 h-5 group-hover:rotate-12 transition-transform duration-200" />
                 Go Home
@@ -158,7 +158,7 @@ const NotFoundPage = () => {
               
               <button
                 onClick={handleGoBack}
-                className="group flex items-center gap-3 bg-white/80 text-gray-700 font-semibold px-8 py-3 rounded-xl border border-gray-300 hover:bg-gray-50 hover:border-gray-400 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-md"
+                className="cursor-pointer group flex items-center gap-3 bg-white/80 text-gray-700 font-semibold px-8 py-3 rounded-xl border border-gray-300 hover:bg-gray-50 hover:border-gray-400 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-md"
               >
                 <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-200" />
                 Go Back
@@ -166,7 +166,7 @@ const NotFoundPage = () => {
               
               <button
                 onClick={handleRefresh}
-                className="group flex items-center gap-3 bg-green-100 text-green-700 font-semibold px-6 py-3 rounded-xl hover:bg-green-200 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-all duration-200 transform hover:scale-105 active:scale-95"
+                className="cursor-pointer group flex items-center gap-3 bg-green-100 text-green-700 font-semibold px-6 py-3 rounded-xl hover:bg-green-200 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-all duration-200 transform hover:scale-105 active:scale-95"
               >
                 <RefreshCw className="w-5 h-5 group-hover:rotate-180 transition-transform duration-500" />
                 Refresh
@@ -178,14 +178,14 @@ const NotFoundPage = () => {
           <div className="bg-green-50/80 backdrop-blur-sm rounded-2xl border border-green-200 p-6 mb-8">
             <h3 className="text-lg font-semibold text-gray-800 mb-4">Maybe you're looking for:</h3>
             <div className="flex flex-wrap justify-center gap-3">
-              {['Home', 'About', 'Dashboard', 'Contact'].map((link, index) => (
+              {[{name:'Home',url:"/landingpage"}, {name:'Network',url:"/network"}, {name:'Dashboard',url:"/dashboard"}, {name:'Events',url:"/events"}].map((link) => (
                 <button
-                  key={link}
-                  onClick={() => console.log(`Navigate to ${link}`)}
+                  key={link.name}
+                  onClick={() => window.location.href = link.url}
                   className="px-4 py-2 bg-white text-green-700 rounded-lg border border-green-200 hover:bg-green-100 hover:border-green-300 transition-all duration-200 transform hover:scale-105 text-sm font-medium"
-                  style={{ animationDelay: `${index * 0.1}s` }}
+                  style={{ animationDelay: `${0.1}s` }}
                 >
-                  {link}
+                  {link.name}
                 </button>
               ))}
             </div>
