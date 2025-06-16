@@ -647,8 +647,7 @@ export const EventDetailPage = ({ user, onLogout }) => {
                           ? "Virtual Event"
                           : "In-Person Event"}{" "}
                         <br />
-                        {formatTime(event.startDateTime)} -{" "}
-                        {formatTime(event.endDateTime)}
+                         {formatDate(event.startDateTime)}, {formatTime(event.startDateTime)} - {formatDate(event.endDateTime)},{formatTime(event.endDateTime)}
                       </p>
                     </div>
 
