@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 import eventService from "../services/eventService";
 import Sidebar from "../components/common/Navbar";
-import CustomFieldsSection from "../components/common/CustomFieldsSection"; // Import the new component
+// import CustomFieldsSection from "../components/common/CustomFieldsSection"; // Import the new component
 
 const EventCreationPage = ({ user, onLogout }) => {
   const navigate = useNavigate();
@@ -52,7 +52,7 @@ const EventCreationPage = ({ user, onLogout }) => {
     maxAttendees: "",
     isPrivate: false,
     requireApproval: false,
-    customFields: [], // Add customFields to the form state
+    // customFields: [], // Add customFields to the form state
   });
 
   // UI state
@@ -69,8 +69,8 @@ const EventCreationPage = ({ user, onLogout }) => {
     { id: 2, name: "Date & Time" },
     { id: 3, name: "Location" },
     { id: 4, name: "Image & Settings" },
-    { id: 5, name: "Custom Fields" },
-    { id: 6, name: "Tickets" }, // New step for tickets
+    // { id: 5, name: "Custom Fields" },
+    { id: 5, name: "Tickets" }, // New step for tickets
   ];
 
   // Handle standard input changes
@@ -104,12 +104,12 @@ const EventCreationPage = ({ user, onLogout }) => {
   };
 
   // Handle custom fields changes
-  const handleCustomFieldsChange = (customFields) => {
-    setFormData((prev) => ({
-      ...prev,
-      customFields,
-    }));
-  };
+  // const handleCustomFieldsChange = (customFields) => {
+  //   setFormData((prev) => ({
+  //     ...prev,
+  //     customFields,
+  //   }));
+  // };
 
   // Handle cover image upload
   const handleImageUpload = (e) => {
@@ -254,6 +254,7 @@ const EventCreationPage = ({ user, onLogout }) => {
 
     try {
       setSubmitting(true);
+      setError(null);
 
       // Prepare data for API
       const eventData = {
@@ -280,19 +281,36 @@ const EventCreationPage = ({ user, onLogout }) => {
           : null,
         isPrivate: formData.isPrivate,
         requireApproval: formData.requireApproval,
-        customFields: formData.customFields,
+        // customFields: formData.customFields,
       };
+
+      console.log("Submitting event data:", eventData);
 
       // Call API to create event
       const response = await eventService.createEvent(eventData);
+      console.log("Event creation response:", response);
+
+      if (!response.success) {
+        throw new Error(response.error || "Failed to create event");
+      }
+
+      if (!response.data) {
+        throw new Error("No data received from server");
+      }
 
       // Store response data
       setCreatedEventResponse(response);
 
-      // Navigate to the ticket creation page immediately
-      navigate(
-        `/events/${response.data._id || response.data.id}/tickets/create`
-      );
+      // Get the event ID from the response
+      const eventId = response.data._id || response.data.id;
+
+      if (!eventId) {
+        console.error("Event ID not found in response:", response.data);
+        throw new Error("Event ID not found in server response");
+      }
+
+      // Navigate to the ticket creation page
+      navigate(`/events/${eventId}/tickets/create`);
     } catch (err) {
       console.error("Error creating event:", err);
       setError(
@@ -331,7 +349,7 @@ const EventCreationPage = ({ user, onLogout }) => {
                 value={formData.description}
                 onChange={handleInputChange}
                 rows={5}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 resize-none focus:ring-green-500 focus:border-green-500"
                 placeholder="Describe your event, what attendees can expect, etc."
               ></textarea>
               <p className="mt-1 text-sm text-green-500">
@@ -415,6 +433,7 @@ const EventCreationPage = ({ user, onLogout }) => {
                   name="startDate"
                   value={formData.startDate}
                   onChange={handleInputChange}
+                  min={new Date().toISOString().split('T')[0]}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                   required
                 />
@@ -716,60 +735,60 @@ const EventCreationPage = ({ user, onLogout }) => {
           </div>
         );
 
+      // case 5:
+      //   return (
+      //     <div className="bg-white rounded-lg border border-gray-200 p-6">
+      //       <h3 className="text-lg font-medium text-gray-900 mb-4">
+      //         Custom Registration Fields
+      //       </h3>
+      //       <p className="text-gray-600 mb-6">
+      //         Add custom fields to collect additional information from attendees
+      //         during registration.
+      //       </p>
+
+      //       {/* Use the CustomFieldsSection component */}
+      //       <CustomFieldsSection
+      //         customFields={formData.customFields}
+      //         onChange={handleCustomFieldsChange}
+      //       />
+
+      //       <div className="mt-6 border border-green-100 bg-green-50 rounded-lg p-4">
+      //         <h4 className="font-medium text-green-800 mb-3">
+      //           Example Custom Fields
+      //         </h4>
+
+      //         <div className="flex items-start mb-3">
+      //           <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-1">
+      //             <Info className="h-4 w-4 text-green-600" />
+      //           </div>
+      //           <div className="ml-3">
+      //             <h4 className="font-medium text-gray-800">
+      //               Dietary Restrictions
+      //             </h4>
+      //             <p className="text-sm text-gray-600">
+      //               For events with meals or refreshments
+      //             </p>
+      //           </div>
+      //         </div>
+
+      //         <div className="flex items-start">
+      //           <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-1">
+      //             <Users className="h-4 w-4 text-green-600" />
+      //           </div>
+      //           <div className="ml-3">
+      //             <h4 className="font-medium text-gray-800">
+      //               Company or Organization
+      //             </h4>
+      //             <p className="text-sm text-gray-600">
+      //               For networking events or business gatherings
+      //             </p>
+      //           </div>
+      //         </div>
+      //       </div>
+      //     </div>
+      //   );
+
       case 5:
-        return (
-          <div className="bg-white rounded-lg border border-gray-200 p-6">
-            <h3 className="text-lg font-medium text-gray-900 mb-4">
-              Custom Registration Fields
-            </h3>
-            <p className="text-gray-600 mb-6">
-              Add custom fields to collect additional information from attendees
-              during registration.
-            </p>
-
-            {/* Use the CustomFieldsSection component */}
-            <CustomFieldsSection
-              customFields={formData.customFields}
-              onChange={handleCustomFieldsChange}
-            />
-
-            <div className="mt-6 border border-green-100 bg-green-50 rounded-lg p-4">
-              <h4 className="font-medium text-green-800 mb-3">
-                Example Custom Fields
-              </h4>
-
-              <div className="flex items-start mb-3">
-                <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-1">
-                  <Info className="h-4 w-4 text-green-600" />
-                </div>
-                <div className="ml-3">
-                  <h4 className="font-medium text-gray-800">
-                    Dietary Restrictions
-                  </h4>
-                  <p className="text-sm text-gray-600">
-                    For events with meals or refreshments
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start">
-                <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-1">
-                  <Users className="h-4 w-4 text-green-600" />
-                </div>
-                <div className="ml-3">
-                  <h4 className="font-medium text-gray-800">
-                    Company or Organization
-                  </h4>
-                  <p className="text-sm text-gray-600">
-                    For networking events or business gatherings
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 6:
         return (
           <div className="bg-white rounded-lg border border-gray-200 p-6">
             <h3 className="text-lg font-medium text-gray-900 mb-4">
@@ -827,9 +846,10 @@ const EventCreationPage = ({ user, onLogout }) => {
                   className="px-6 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700"
                   onClick={() =>
                     navigate(
-                      `/events/${createdEventResponse?.data?._id ||
-                      createdEventResponse?.data?.id ||
-                      "new"
+                      `/events/${
+                        createdEventResponse?.data?._id ||
+                        createdEventResponse?.data?.id ||
+                        "new"
                       }`
                     )
                   }
@@ -887,12 +907,12 @@ const EventCreationPage = ({ user, onLogout }) => {
           {/* Step Indicators */}
           <div className="px-4 pb-4">
             <div className="flex flex-col sm:flex-row lg:justify-between gap-4">
-
               {formSteps.map((step, index) => (
                 <div
                   key={step.id}
-                  className={`flex items-center ${index < formSteps.length - 1 ? "flex-1" : ""
-                    }`}
+                  className={`flex items-center ${
+                    index < formSteps.length - 1 ? "flex-1" : ""
+                  }`}
                   onClick={() =>
                     step.id <= activeStep ? setActiveStep(step.id) : null
                   }
@@ -901,12 +921,13 @@ const EventCreationPage = ({ user, onLogout }) => {
                   }}
                 >
                   <div
-                    className={`flex items-center justify-center w-8 h-8 rounded-full ${activeStep === step.id
+                    className={`flex items-center justify-center w-8 h-8 rounded-full ${
+                      activeStep === step.id
                         ? "bg-green-500 text-white"
                         : activeStep > step.id
-                          ? "bg-green-100 text-green-500 border border-green-500"
-                          : "bg-gray-100 text-gray-400"
-                      }`}
+                        ? "bg-green-100 text-green-500 border border-green-500"
+                        : "bg-gray-100 text-gray-400"
+                    }`}
                   >
                     {activeStep > step.id ? (
                       <svg
@@ -927,23 +948,24 @@ const EventCreationPage = ({ user, onLogout }) => {
                   </div>
 
                   <span
-                    className={`ml-2 text-sm font-medium ${activeStep === step.id
+                    className={`ml-2 text-sm font-medium ${
+                      activeStep === step.id
                         ? "text-gray-900"
                         : activeStep > step.id
-                          ? "text-green-500"
-                          : "text-gray-400"
-                      }`}
+                        ? "text-green-500"
+                        : "text-gray-400"
+                    }`}
                   >
                     {step.name}
                   </span>
 
                   {index < formSteps.length - 1 && (
                     <div
-                      className={`hidden sm:block h-0.5 flex-1 mx-3 ${activeStep > step.id ? "bg-green-500" : "bg-gray-200"
-                        }`}
+                      className={`hidden sm:block h-0.5 flex-1 mx-3 ${
+                        activeStep > step.id ? "bg-green-500" : "bg-gray-200"
+                      }`}
                     ></div>
                   )}
-
                 </div>
               ))}
             </div>
@@ -979,8 +1001,9 @@ const EventCreationPage = ({ user, onLogout }) => {
                 type="button"
                 onClick={prevStep}
                 disabled={activeStep === 1}
-                className={`px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 ${activeStep === 1 ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
+                className={`px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 ${
+                  activeStep === 1 ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               >
                 Previous
               </button>
@@ -997,8 +1020,9 @@ const EventCreationPage = ({ user, onLogout }) => {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className={`px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 ${submitting ? "opacity-75 cursor-not-allowed" : ""
-                    }`}
+                  className={`px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 ${
+                    submitting ? "opacity-75 cursor-not-allowed" : ""
+                  }`}
                 >
                   {submitting ? "Creating..." : "Create Event"}
                 </button>
