@@ -165,6 +165,9 @@ const MergedDashboard = () => {
   const [showConnectionRequests, setShowConnectionRequests] = useState(false);
   const [showYourEvents, setShowYourEvents] = useState(false);
 
+  // Sidebar open state for mobile
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   useEffect(() => {
     // Redirect to login if not authenticated
     if (!loading && !user) {
@@ -609,29 +612,49 @@ const MergedDashboard = () => {
   // Loading state for main dashboard
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen bg-orange-50">
+      <div className="flex justify-center items-center min-h-screen bg-orange-50 overflow-x-hidden">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500"></div>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen bg-orange-50">
+    <div className="flex flex-col md:flex-row min-h-screen bg-orange-50 overflow-x-hidden">
       {/* Sidebar - hidden on mobile, visible on md and up */}
-      <div className="hidden md:block">
+      <div className="md:block hidden">
         <Sidebar user={user || {}} onLogout={logout} />
       </div>
-
-      <div className="w-full px-4 mx-auto max-w-[1400px]">
-        <div className="flex gap-4 mt-20">
-          <div className="w-[979px]">
-            <div className="bg-white rounded-lg shadow-md p-4 h-[131px] mb-4">
+      {/* Mobile sidebar toggle button */}
+      <button
+        className="fixed top-4 left-4 z-50 md:hidden bg-white rounded-full p-2 shadow-lg border border-gray-200"
+        onClick={() => setSidebarOpen(true)}
+        aria-label="Open sidebar"
+      >
+        <Home className="w-6 h-6 text-orange-500" />
+      </button>
+      {/* Mobile sidebar drawer */}
+      {sidebarOpen && (
+        <div className="fixed inset-0 z-50 flex">
+          <div className="w-64 bg-white shadow-lg h-full">
+            <Sidebar user={user || {}} onLogout={logout} />
+          </div>
+          <div
+            className="flex-1 bg-black/30"
+            onClick={() => setSidebarOpen(false)}
+          />
+        </div>
+      )}
+      <div className="flex-1 w-full px-2 sm:px-4 mx-auto max-w-full md:max-w-[1400px]">
+        <div className="flex flex-col lg:flex-row gap-4 mt-20">
+          {/* Main content */}
+          <div className="w-full lg:w-[65%] min-w-0">
+            <div className="bg-white rounded-lg shadow-md p-4 h-auto mb-4 flex flex-col justify-between min-h-[110px]">
               <div className="flex flex-col h-full justify-between">
                 <div className="flex justify-end">
-                  <div className="flex gap-3">
+                  <div className="flex gap-2 sm:gap-3 flex-wrap">
                     <button
-                      onClick={() => window.location.href='/connections'}
-                      className="w-[199px] h-[25px] bg-[#DE7373]/50 text-white rounded-full text-sm font-medium flex items-center justify-center hover:bg-[#DE7373]/60 transition-colors"
+                      onClick={() => (window.location.href = "/connections")}
+                      className="w-auto min-w-[150px] h-[32px] bg-[#DE7373]/50 text-white rounded-full text-xs sm:text-sm font-medium flex items-center justify-center hover:bg-[#DE7373]/60 transition-colors px-3 sm:px-6"
                     >
                       <span className="font-normal items-center cursor-pointer text-black">
                         Connection Requests ({pendingRequests})
@@ -639,7 +662,7 @@ const MergedDashboard = () => {
                     </button>
                     <button
                       onClick={() => setShowYourEvents(true)}
-                      className="w-[152px] h-[25px] bg-[#9ABE80]/50 text-white rounded-full text-sm font-medium flex items-center justify-center hover:bg-[#9ABE80]/60 transition-colors"
+                      className="w-auto min-w-[120px] h-[32px] bg-[#9ABE80]/50 text-white rounded-full text-xs sm:text-sm font-medium flex items-center justify-center hover:bg-[#9ABE80]/60 transition-colors px-3 sm:px-6"
                     >
                       <span className="font-normal items-center cursor-pointer text-black">
                         Your Events
@@ -648,16 +671,15 @@ const MergedDashboard = () => {
                   </div>
                 </div>
                 <div>
-                  <h2 className="font-light text-3xl text-gray-700">
+                  <h2 className="font-light text-2xl sm:text-3xl text-gray-700">
                     WELCOME BACK 👋🏻
                   </h2>
                 </div>
               </div>
             </div>
-
             {/* Events Carousel */}
-            <div className="w-[979px] h-[315px] relative mb-8">
-              <div className="overflow-hidden rounded-3xl shadow-xl h-full">
+            <div className="w-full h-[220px] sm:h-[315px] relative mb-8">
+              <div className="overflow-hidden rounded-2xl sm:rounded-3xl shadow-xl h-full">
                 <div
                   className="flex transition-transform duration-500 ease-in-out h-full"
                   style={{ transform: `translateX(-${currentSlide * 100}%)` }}
@@ -673,28 +695,26 @@ const MergedDashboard = () => {
                   ))}
                 </div>
               </div>
-
               {events.length > 1 && (
                 <>
                   <button
                     onClick={prevSlide}
-                    className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-3 shadow-lg transition-all hover:scale-110 cursor-pointer"
+                    className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-2 sm:p-3 shadow-lg transition-all hover:scale-110 cursor-pointer"
                   >
-                    <ChevronLeft className="w-6 h-6 text-gray-700" />
+                    <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 text-gray-700" />
                   </button>
                   <button
                     onClick={nextSlide}
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-3 shadow-lg transition-all hover:scale-110 cursor-pointer"
+                    className="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-2 sm:p-3 shadow-lg transition-all hover:scale-110 cursor-pointer"
                   >
-                    <ChevronRight className="w-6 h-6 text-gray-700" />
+                    <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-gray-700" />
                   </button>
-
-                  <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                  <div className="absolute bottom-2 sm:bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-1 sm:space-x-2">
                     {events.map((_, index) => (
                       <button
                         key={index}
                         onClick={() => setCurrentSlide(index)}
-                        className={`w-3 h-3 rounded-full transition-all cursor-pointer ${
+                        className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all cursor-pointer ${
                           currentSlide === index
                             ? "bg-white scale-125"
                             : "bg-white/50 hover:bg-white/75"
@@ -705,11 +725,10 @@ const MergedDashboard = () => {
                 </>
               )}
             </div>
-
             {/* Connection Requests Modal */}
             {showConnectionRequests && (
-              <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                <div className="bg-white rounded-lg p-6 w-full max-w-md">
+              <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-2 sm:p-0">
+                <div className="bg-white rounded-lg p-4 sm:p-6 w-full max-w-md mx-auto">
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="text-xl font-bold">Connection Requests</h3>
                     <button
@@ -772,11 +791,10 @@ const MergedDashboard = () => {
                 </div>
               </div>
             )}
-
             {/* Your Events Modal */}
             {showYourEvents && (
-              <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                <div className="bg-white rounded-lg p-6 w-full max-w-2xl">
+              <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-2 sm:p-0">
+                <div className="bg-white rounded-lg p-4 sm:p-6 w-full max-w-2xl mx-auto">
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="text-xl font-bold">Your Events</h3>
                     <button
@@ -836,15 +854,14 @@ const MergedDashboard = () => {
                 </div>
               </div>
             )}
-
             {/* Nearby Professionals Section */}
             <div className="w-full">
-              <div className="flex justify-between items-center mb-6">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-2 sm:gap-0">
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-800">
+                  <h2 className="text-xl sm:text-2xl font-bold text-gray-800">
                     Nearby Professionals
                   </h2>
-                  <p className="text-sm text-gray-500 mt-1">
+                  <p className="text-xs sm:text-sm text-gray-500 mt-1">
                     Connect with professionals in your area
                   </p>
                 </div>
@@ -856,14 +873,13 @@ const MergedDashboard = () => {
                       10
                     )
                   }
-                  className="flex items-center gap-2 px-4 py-2 bg-orange-50 text-orange-600 rounded-full hover:bg-orange-100 transition-colors"
+                  className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-orange-50 text-orange-600 rounded-full hover:bg-orange-100 transition-colors text-xs sm:text-sm"
                 >
                   <RefreshCw className="w-4 h-4" />
-                  <span className="text-sm font-medium">Refresh</span>
+                  <span className="font-medium">Refresh</span>
                 </button>
               </div>
-
-              <div className="flex gap-6 overflow-x-auto pb-6">
+              <div className="flex gap-4 sm:gap-6 overflow-x-auto pb-6">
                 {nearbyUsers.map((user) => (
                   <div
                     key={user._id || user.id}
@@ -979,15 +995,15 @@ const MergedDashboard = () => {
               </div>
             </div>
           </div>
-
-          <div className="w-[399px] h-[798px]">
-            <div className="bg-white rounded-2xl shadow-lg p-5 h-full flex flex-col">
+          {/* Right sidebar */}
+          <div className="w-full lg:w-[35%] h-auto lg:h-[798px] min-w-0">
+            <div className="bg-white rounded-2xl shadow-lg p-3 sm:p-5 h-full flex flex-col">
               {/* Upcoming Events Section */}
               <div className="flex-1">
-                <h2 className="text-xl font-semibold mb-4 text-gray-800">
+                <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-gray-800">
                   Upcoming Events
                 </h2>
-                <div className="space-y-3">
+                <div className="space-y-2 sm:space-y-3">
                   {events
                     .filter(
                       (event) => new Date(event.startDateTime) >= new Date()
@@ -997,17 +1013,17 @@ const MergedDashboard = () => {
                       <div
                         key={event._id}
                         onClick={() => handleEventClick(event._id)}
-                        className="p-4 bg-orange-50 rounded-xl border border-orange-100 hover:border-orange-300 transition duration-200 cursor-pointer hover:bg-orange-100"
+                        className="p-3 sm:p-4 bg-orange-50 rounded-xl border border-orange-100 hover:border-orange-300 transition duration-200 cursor-pointer hover:bg-orange-100"
                       >
-                        <div className="flex items-start gap-4">
-                          <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
-                            <Calendar className="w-6 h-6 text-orange-600" />
+                        <div className="flex items-start gap-3 sm:gap-4">
+                          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-orange-100 rounded-xl flex items-center justify-center">
+                            <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-orange-600" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-gray-900 truncate">
+                            <p className="text-xs sm:text-sm font-medium text-gray-900 truncate">
                               {event.name}
                             </p>
-                            <p className="text-xs text-gray-600 mt-1">
+                            <p className="text-[10px] sm:text-xs text-gray-600 mt-1">
                               {new Date(event.startDateTime).toLocaleDateString(
                                 "en-US",
                                 {
@@ -1019,9 +1035,9 @@ const MergedDashboard = () => {
                                 }
                               )}
                             </p>
-                            <div className="flex items-center gap-2 mt-2">
+                            <div className="flex items-center gap-1 sm:gap-2 mt-2">
                               <MapPin className="w-3 h-3 text-gray-500" />
-                              <p className="text-xs text-gray-500 truncate">
+                              <p className="text-[10px] sm:text-xs text-gray-500 truncate">
                                 {event.virtual
                                   ? "Virtual Event"
                                   : event.location?.name || "Location TBA"}
@@ -1033,16 +1049,15 @@ const MergedDashboard = () => {
                     ))}
                 </div>
               </div>
-
               {/* Calendar Section */}
-              <div className="mt-auto pt-5 border-t border-gray-100 w-full">
-                <div className="flex items-center justify-between mb-3">
-                  <h2 className="text-xl font-semibold text-gray-800">
+              <div className="mt-auto pt-4 sm:pt-5 border-t border-gray-100 w-full">
+                <div className="flex items-center justify-between mb-2 sm:mb-3">
+                  <h2 className="text-lg sm:text-xl font-semibold text-gray-800">
                     Calendar
                   </h2>
                   <button
                     onClick={() => setSelectedDate(new Date())}
-                    className="text-sm text-orange-600 hover:text-orange-700 font-medium transition"
+                    className="text-xs sm:text-sm text-orange-600 hover:text-orange-700 font-medium transition"
                   >
                     Today
                   </button>
@@ -1055,13 +1070,13 @@ const MergedDashboard = () => {
                     className="w-full"
                     calendarClassName="!w-full !border-0"
                     dayClassName={(date) =>
-                      `text-sm rounded-full transition duration-150 ease-in-out 
-                      hover:bg-orange-100 
+                      `text-xs sm:text-sm rounded-full transition duration-150 ease-in-out \
+                      hover:bg-orange-100 \
                       ${
                         date.toDateString() === new Date().toDateString()
                           ? "!text-orange-600 font-bold"
                           : ""
-                      }
+                      }\
                       ${
                         date.toDateString() === selectedDate?.toDateString()
                           ? "!bg-orange-500 !text-white hover:!bg-orange-600"
@@ -1075,15 +1090,15 @@ const MergedDashboard = () => {
                       prevMonthButtonDisabled,
                       nextMonthButtonDisabled,
                     }) => (
-                      <div className="flex items-center justify-between px-6 py-4 bg-orange-50">
+                      <div className="flex items-center justify-between px-3 sm:px-6 py-2 sm:py-4 bg-orange-50">
                         <button
                           onClick={decreaseMonth}
                           disabled={prevMonthButtonDisabled}
-                          className="p-2 rounded-full hover:bg-orange-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                          className="p-1 sm:p-2 rounded-full hover:bg-orange-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                         >
-                          <ChevronLeft className="w-5 h-5 text-orange-600" />
+                          <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 text-orange-600" />
                         </button>
-                        <span className="text-lg font-semibold text-gray-800">
+                        <span className="text-base sm:text-lg font-semibold text-gray-800">
                           {date.toLocaleDateString("en-US", {
                             month: "long",
                             year: "numeric",
@@ -1092,9 +1107,9 @@ const MergedDashboard = () => {
                         <button
                           onClick={increaseMonth}
                           disabled={nextMonthButtonDisabled}
-                          className="p-2 rounded-full hover:bg-orange-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                          className="p-1 sm:p-2 rounded-full hover:bg-orange-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                         >
-                          <ChevronRight className="w-5 h-5 text-orange-600" />
+                          <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-orange-600" />
                         </button>
                       </div>
                     )}
