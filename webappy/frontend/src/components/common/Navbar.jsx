@@ -257,8 +257,8 @@ const Sidebar = ({ user = {}, onLogout }) => {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-100 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            {/* Left Section - Logo & Search */}
-            <div className="flex items-center space-x-6">
+            {/* Left Section - Logo */}
+            <div className="flex items-center space-x-3">
               <Link
                 to="/dashboard"
                 className="flex items-center space-x-3 group"
@@ -274,55 +274,36 @@ const Sidebar = ({ user = {}, onLogout }) => {
                   Meetkats
                 </span>
               </Link>
-
-              {/* Search Bar - Moved to left */}
-              <div className="hidden lg:block">
-                <form onSubmit={handleSearch} className="w-full">
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <svg
-                        className={`h-4 w-4 transition-colors duration-200 ${
-                          searchFocused ? "text-blue-500" : "text-gray-400"
-                        }`}
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </div>
-                    <input
-                      type="search"
-                      name="search"
-                      id="search"
-                      className="w-80 bg-gray-50 border border-gray-200 rounded-lg py-2 pl-10 pr-4 text-sm placeholder-gray-400 focus:outline-none focus:bg-white focus:border-blue-300 focus:ring-2 focus:ring-blue-100 transition-all duration-200"
-                      placeholder="Search people, posts, companies..."
-                      onFocus={() => setSearchFocused(true)}
-                      onBlur={() => setSearchFocused(false)}
-                    />
+            </div>
+            {/* Mobile Search Bar in the middle */}
+            <div className="flex-1 px-2 lg:hidden">
+              <form onSubmit={handleSearch} className="w-full">
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <svg
+                      className="h-4 w-4 text-gray-400"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
                   </div>
-                </form>
-              </div>
+                  <input
+                    type="search"
+                    name="search"
+                    id="mobile-search"
+                    className="w-full bg-gray-50 border border-gray-200 rounded-lg py-2 pl-10 pr-4 text-sm placeholder-gray-400 focus:outline-none focus:bg-white focus:border-blue-300 focus:ring-2 focus:ring-blue-100"
+                    placeholder="Search..."
+                  />
+                </div>
+              </form>
             </div>
-
-            {/* Center Section - Navigation Links */}
-            <div className="hidden lg:flex items-center space-x-6 ml-auto mr-8">
-              {navItems.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  className="flex items-center space-x-2 px-4 py-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200 group"
-                >
-                  <span className="text-sm font-medium">{item.name}</span>
-                </Link>
-              ))}
-            </div>
-
-            {/* Right Section - Actions & Profile */}
+            {/* Right Section - Profile/Avatar and Hamburger */}
             <div className="flex items-center space-x-4">
               {/* Notifications Dropdown */}
               <div ref={notificationsRef} className="relative hidden lg:block">
@@ -640,35 +621,6 @@ const Sidebar = ({ user = {}, onLogout }) => {
               </button>
             </div>
           </div>
-        </div>
-
-        {/* Mobile Search Bar */}
-        <div className="lg:hidden border-t border-gray-100 px-4 py-3">
-          <form onSubmit={handleSearch} className="w-full">
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg
-                  className="h-4 w-4 text-gray-400"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </div>
-              <input
-                type="search"
-                name="search"
-                id="mobile-search"
-                className="w-full bg-gray-50 border border-gray-200 rounded-lg py-2 pl-10 pr-4 text-sm placeholder-gray-400 focus:outline-none focus:bg-white focus:border-blue-300 focus:ring-2 focus:ring-blue-100"
-                placeholder="Search..."
-              />
-            </div>
-          </form>
         </div>
       </nav>
 
