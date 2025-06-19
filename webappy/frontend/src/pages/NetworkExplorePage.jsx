@@ -207,7 +207,7 @@ const NetworkExplorePage = ({user,onLogout}) => {
 
       {/* Main Content */}
       <div
-        className={`flex-1 overflow-auto transition-all duration-300 ${"ml-60"}`}
+        className="flex-1 overflow-auto transition-all duration-300 mt-16 lg:mt-0"
       >
         <main className="max-w-7xl mx-auto p-4 md:p-6 mt-20">
           {/* Dashboard Header */}
