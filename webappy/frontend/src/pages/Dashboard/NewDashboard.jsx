@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import Sidebar from "../../components/common/Navbar";
@@ -20,7 +20,6 @@ import {
   UserPlus,
   Rss,
   Home,
-  ArrowUpDown,
   RefreshCw,
   ChevronLeft,
 } from "lucide-react";
@@ -29,8 +28,6 @@ import defaultProfilePic from "../../assets/default-avatar.png";
 import eventService from "../../services/eventService";
 import networkService from "../../services/networkService";
 import nearbyUsersService from "../../services/nearbyUsersService";
-import LocationPermissionIcon from "../../components/LocationPermissionIcon";
-import Footer from "../../components/footer/Footer";
 
 const CarouselCard = ({ event }) => {
   const truncateDescription = (text, maxLength = 80) => {
