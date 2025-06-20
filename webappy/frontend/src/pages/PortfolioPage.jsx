@@ -29,12 +29,14 @@ const PortfolioPage = () => {
       const [projectsData, achievementsData, streaksData] = await Promise.all([
         portfolioService.getProjects(user.id),
         portfolioService.getAchievements(user.id),
-        portfolioService.getUserStreaks(user.id, { limit: 10 }).then(data => data.items || [])
+        portfolioService.getUserStreaks(user.id, { limit: 10 })
       ]);
       
       setProjects(projectsData);
       setAchievements(achievementsData);
       setStreaks(streaksData);
+      console.log("Streaks data:", streaks);
+
     } catch (err) {
       console.error('Error fetching portfolio data:', err);
       setError('Failed to load portfolio data. Please try again later.');
@@ -429,7 +431,7 @@ const PortfolioPage = () => {
               {streaks.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {streaks.map((streak) => (
-                    <div key={streak.id} className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                    <div key={streak._id} className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow">
                       <div className="p-4">
                         <div className="flex justify-between">
                           <div className="flex items-center">
@@ -444,7 +446,7 @@ const PortfolioPage = () => {
                           
                           <div className="flex space-x-1">
                             <button 
-                              onClick={() => handleNavigation(`/portfolio/streaks/edit/${streak.id}`)}
+                              onClick={() => handleNavigation(`/portfolio/streaks/edit/${streak._id}`)}
                               className="text-gray-500 hover:text-green-600"
                               disabled={actionLoading}
                               aria-label="Edit streak"
@@ -452,7 +454,7 @@ const PortfolioPage = () => {
                               <Edit className="h-4 w-4" />
                             </button>
                             <button 
-                              onClick={() => handleDeleteStreak(streak.id)}
+                              onClick={() => handleDeleteStreak(streak._id)}
                               className="text-gray-500 hover:text-red-600"
                               disabled={actionLoading}
                               aria-label="Delete streak"
@@ -512,7 +514,7 @@ const PortfolioPage = () => {
                   <h3 className="text-xl font-semibold text-gray-800 mb-2">No Streaks Yet</h3>
                   <p className="text-gray-600 mb-6">Track your daily habits and consistency with streaks.</p>
                   <button 
-                    onClick={() => handleNavigation('/portfolio/streaks/new')}
+                    onClick={() => handleNavigation('/portfolio/streak/new')}
                     className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
                     disabled={actionLoading}
                   >
