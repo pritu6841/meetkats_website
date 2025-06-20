@@ -24,6 +24,11 @@ const StreakCreationPage = () => {
     daysPerWeek: 1,
     specificDays: []
   });
+const getTodayDate = () => {
+  const today = new Date();
+  today.setMinutes(today.getMinutes() - today.getTimezoneOffset()); // adjust to local
+  return today.toISOString().split('T')[0];
+};
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -322,6 +327,7 @@ const StreakCreationPage = () => {
                             id="startDate"
                             name="startDate"
                             type="date"
+                            min={getTodayDate()}
                             value={streakData.startDate}
                             onChange={handleChange}
                             className="pl-10 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500"
