@@ -275,6 +275,18 @@ const Sidebar = ({ user = {}, onLogout }) => {
                 </span>
               </Link>
             </div>
+            <div className="hidden lg:flex items-center space-x-20">
+              {navItems.map((item) => (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className="flex items-center space-x-2 text-gray-600 hover:text-blue-600 transition-colors"
+                >
+                  
+                  <span className="text-sm font-medium">{item.name}</span>
+                </Link>
+              ))}
+            </div>
             {/* Mobile Search Bar in the middle */}
             <div className="flex-1 px-2 lg:hidden">
               <form onSubmit={handleSearch} className="w-full">
@@ -359,9 +371,8 @@ const Sidebar = ({ user = {}, onLogout }) => {
                         notificationItems.map((notification) => (
                           <div
                             key={notification.id}
-                            className={`px-4 py-3 hover:bg-gray-50 border-b border-gray-50 cursor-pointer transition-colors ${
-                              notification.read ? "bg-white" : "bg-blue-25"
-                            }`}
+                            className={`px-4 py-3 hover:bg-gray-50 border-b border-gray-50 cursor-pointer transition-colors ${notification.read ? "bg-white" : "bg-blue-25"
+                              }`}
                             onClick={() =>
                               !notification.read &&
                               handleMarkAsRead(notification.id)
@@ -635,9 +646,8 @@ const Sidebar = ({ user = {}, onLogout }) => {
       {/* Mobile Slide-out Menu */}
       <div
         ref={mobileMenuRef}
-        className={`fixed top-0 right-0 h-full w-80 bg-white shadow-xl transform transition-transform duration-300 ease-in-out z-50 lg:hidden ${
-          mobileMenuOpen ? "translate-x-0" : "translate-x-full"
-        }`}
+        className={`fixed top-0 right-0 h-full w-80 bg-white shadow-xl transform transition-transform duration-300 ease-in-out z-50 lg:hidden ${mobileMenuOpen ? "translate-x-0" : "translate-x-full"
+          }`}
       >
         <div className="flex flex-col h-full">
           {/* Mobile Menu Header */}
@@ -710,11 +720,10 @@ const Sidebar = ({ user = {}, onLogout }) => {
                     notificationItems.slice(0, 3).map((notification) => (
                       <div
                         key={notification.id}
-                        className={`p-3 rounded-lg border ${
-                          notification.read
+                        className={`p-3 rounded-lg border ${notification.read
                             ? "bg-white border-gray-200"
                             : "bg-blue-50 border-blue-200"
-                        }`}
+                          }`}
                         onClick={() =>
                           !notification.read &&
                           handleMarkAsRead(notification.id)

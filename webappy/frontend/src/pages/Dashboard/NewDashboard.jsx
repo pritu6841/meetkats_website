@@ -44,6 +44,8 @@ const CarouselCard = ({ event }) => {
       return "Date TBA";
     }
   };
+  // const { token, user } = useAuth();
+
 
   return (
     <div className="relative min-w-full h-80 rounded-2xl overflow-hidden shadow-lg">
@@ -98,7 +100,7 @@ const CarouselCard = ({ event }) => {
 
 const MergedDashboard = () => {
   // Auth and navigation
-  const { user, loading, logout } = useAuth();
+  const { user, loading, logout,token } = useAuth();
   const navigate = useNavigate();
   const toastContext = useToast();
   const toast = toastContext?.toast;
@@ -163,10 +165,14 @@ const MergedDashboard = () => {
 
   // Sidebar open state for mobile
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
+  useEffect(() => {
+    console.log("Token on Dashboard load:", token);
+    console.log("User on Dashboard load:", user);
+  }, [token]);
   useEffect(() => {
     // Redirect to login if not authenticated
-    if (!loading && !user) {
+   
+    if (!loading && !user && !token) {
       navigate("/login");
     }
   }, [user, loading, navigate]);
