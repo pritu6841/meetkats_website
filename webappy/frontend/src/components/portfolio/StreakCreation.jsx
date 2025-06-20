@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Save, X, Calendar, Clock, Target, Tag } from 'lucide-react';
 import api from '../../services/api';
+import portfolioService from '../../services/portfolioService';
 
 const StreakCreationPage = () => {
   const navigate = useNavigate();
@@ -61,7 +62,7 @@ const StreakCreationPage = () => {
       }
       
       // Submit the form
-      const response = await api.createStreak(formData);
+      const response = await portfolioService.createStreak(formData);
       
       setLoading(false);
       navigate(`/portfolio/streaks/${response._id}`);

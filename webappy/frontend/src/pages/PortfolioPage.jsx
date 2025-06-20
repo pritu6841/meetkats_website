@@ -149,7 +149,7 @@ const PortfolioPage = () => {
               
               <div className="mt-4 md:mt-0 w-full md:w-auto flex flex-wrap gap-2">
                 <button 
-                  onClick={() => handleNavigation('/portfolio/streaks/new')}
+                  onClick={() => handleNavigation('/portfolio/streak/new')}
                   className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center"
                   disabled={actionLoading}
                 >
