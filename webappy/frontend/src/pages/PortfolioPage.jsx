@@ -210,22 +210,24 @@ useEffect(() => {
               <div className="mt-4 md:mt-0 w-full md:w-auto flex flex-wrap gap-2">
                 <button
                   onClick={() => handleNavigation('/portfolio/streak/new')}
-                  className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center"
+                  className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center cursor-pointer"
                   disabled={actionLoading}
                 >
                   <PlusCircle className="mr-2 h-4 w-4" /> New Streak
                 </button>
                 <button
                   onClick={() => handleNavigation('/portfolio/projects/new')}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center"
-                  disabled={actionLoading}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center cursor-not-allowed"
+                  disabled
+                  // disabled={actionLoading}
                 >
                   <PlusCircle className="mr-2 h-4 w-4" /> New Project
                 </button>
                 <button
                   onClick={() => handleNavigation('/portfolio/achievements/new')}
-                  className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center"
-                  disabled={actionLoading}
+                  className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center cursor-not-allowed"
+                  disabled
+                  // disabled={actionLoading}
                 >
                   <PlusCircle className="mr-2 h-4 w-4" /> New Achievement
                 </button>
