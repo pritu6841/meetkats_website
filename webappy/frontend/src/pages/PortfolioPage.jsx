@@ -1,9 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback,useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { PlusCircle, Edit, Trash2, Globe, Github, Youtube, Star, Calendar, Award, TrendingUp } from 'lucide-react';
 import portfolioService from '../services/portfolioService';
 import Loader from '../components/common/Loader';
-import { ToastProvider } from '../components/common/Toast';
+import { useToast } from "../components/common/Toast";
+
+
 const PortfolioPage = () => {
   const [projects, setProjects] = useState([]);
   const [achievements, setAchievements] = useState([]);
@@ -14,6 +16,7 @@ const PortfolioPage = () => {
   const [activeSection, setActiveSection] = useState('projects');
   const [userInfo, setUserInfo] = useState(null);
   const navigate = useNavigate();
+  const toast = useToast();
 
   // Fetch portfolio data
   const fetchPortfolio = useCallback(async () => {
@@ -47,6 +50,27 @@ const PortfolioPage = () => {
   useEffect(() => {
     fetchPortfolio();
   }, [fetchPortfolio]);
+// const [todayStr, setTodayStr] = useState(new Date().toLocaleDateString('en-CA'));
+const [todayStr, setTodayStr] = useState('2025-06-23');
+const todayRef = useRef(todayStr);
+
+useEffect(() => {
+  todayRef.current = todayStr; 
+}, [todayStr]);
+
+useEffect(() => {
+  const interval = setInterval(() => {
+    const currentDate = new Date().toLocaleDateString('en-CA');
+    if (currentDate !== todayRef.current) {
+      setTodayStr(currentDate);  
+      fetchPortfolio();          
+    }
+  }, 5 * 60 * 1000); 
+
+  return () => clearInterval(interval);
+}, [fetchPortfolio]); 
+
+
 
   // Delete handlers with loading state and error handling
   const handleDeleteProject = async (projectId) => {
@@ -64,7 +88,42 @@ const PortfolioPage = () => {
       }
     }
   };
+  const handleCheckIn = async (streak) => {
+    if (!userInfo?.id) return;
 
+    const todayStr = new Date().toLocaleDateString('en-CA'); // Format: YYYY-MM-DD
+    const startDateStr = new Date(streak.startDate).toLocaleDateString('en-CA');
+    console.log('🗓️ Today:', todayStr);
+    console.log('📅 Streak Start Date:', startDateStr);
+    const isCheckInAllowed = todayStr >= startDateStr;
+
+    if (!isCheckInAllowed) {
+      toast.warning({
+        title: 'Too Early',
+        description: 'This streak hasn\'t started yet!',
+      });
+      return;
+    }
+
+    try {
+      setActionLoading(true);
+      await portfolioService.checkInToStreak(streak._id);
+      const updatedStreaks = await portfolioService.getUserStreaks(userInfo?.id, { limit: 10 });
+      setStreaks(updatedStreaks);
+      toast.success({
+        title: 'Check-In Successful!',
+        description: 'You have successfully checked in for today.',
+      });
+    } catch (err) {
+      console.error(err);
+      toast.error({
+        title: 'Check-In Failed',
+        description: err?.response?.data?.error || err.message || 'Something went wrong.',
+      });
+    } finally {
+      setActionLoading(false);
+    }
+  };
   const handleDeleteAchievement = async (achievementId) => {
     if (window.confirm('Are you sure you want to delete this achievement?')) {
       try {
@@ -180,8 +239,8 @@ const PortfolioPage = () => {
               <button
                 onClick={() => setActiveSection('projects')}
                 className={`flex-1 text-center py-4 px-4 font-medium text-sm focus:outline-none transition-colors duration-200 ${activeSection === 'projects'
-                    ? 'text-blue-600 border-b-2 border-blue-500'
-                    : 'text-gray-500 hover:text-blue-500'
+                  ? 'text-blue-600 border-b-2 border-blue-500'
+                  : 'text-gray-500 hover:text-blue-500'
                   }`}
                 disabled={actionLoading}
               >
@@ -190,8 +249,8 @@ const PortfolioPage = () => {
               <button
                 onClick={() => setActiveSection('achievements')}
                 className={`flex-1 text-center py-4 px-4 font-medium text-sm focus:outline-none transition-colors duration-200 ${activeSection === 'achievements'
-                    ? 'text-purple-600 border-b-2 border-purple-500'
-                    : 'text-gray-500 hover:text-purple-500'
+                  ? 'text-purple-600 border-b-2 border-purple-500'
+                  : 'text-gray-500 hover:text-purple-500'
                   }`}
                 disabled={actionLoading}
               >
@@ -200,8 +259,8 @@ const PortfolioPage = () => {
               <button
                 onClick={() => setActiveSection('streaks')}
                 className={`flex-1 text-center py-4 px-4 font-medium text-sm focus:outline-none transition-colors duration-200 ${activeSection === 'streaks'
-                    ? 'text-green-600 border-b-2 border-green-500'
-                    : 'text-gray-500 hover:text-green-500'
+                  ? 'text-green-600 border-b-2 border-green-500'
+                  : 'text-gray-500 hover:text-green-500'
                   }`}
                 disabled={actionLoading}
               >
@@ -265,10 +324,10 @@ const PortfolioPage = () => {
                           </div>
                           {project.status && (
                             <span className={`text-xs px-2 py-1 rounded ${project.status === 'completed'
-                                ? 'bg-green-100 text-green-800'
-                                : project.status === 'in-progress'
-                                  ? 'bg-blue-100 text-blue-800'
-                                  : 'bg-gray-100 text-gray-800'
+                              ? 'bg-green-100 text-green-800'
+                              : project.status === 'in-progress'
+                                ? 'bg-blue-100 text-blue-800'
+                                : 'bg-gray-100 text-gray-800'
                               }`}>
                               {project.status.replace('-', ' ')}
                             </span>
@@ -424,82 +483,124 @@ const PortfolioPage = () => {
           {activeSection === 'streaks' && (
             <div>
               {streaks.length > 0 ? (
+
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {streaks.map((streak) => (
-                    <div key={streak._id} className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-                      <div className="p-4">
-                        <div className="flex justify-between">
-                          <div className="flex items-center">
-                            <div className="flex h-14 w-14 mr-4 rounded-lg bg-green-100 items-center justify-center">
-                              <TrendingUp className="h-8 w-8 text-green-600" />
+                  {streaks.map((streak) => {
+                    const todayStr = new Date().toLocaleDateString('en-CA');
+                    const streakStartStr = new Date(streak.startDate).toLocaleDateString('en-CA');
+
+                    const isCheckInAllowed = todayStr >= streakStartStr;
+
+                    const hasCheckedInToday = streak.recentCheckIns?.some((checkIn) => {
+                      const checkInDateStr = new Date(checkIn.date).toLocaleDateString('en-CA');
+                      return checkInDateStr === todayStr;
+                    });
+
+
+                    return (
+
+                      <div key={streak._id} className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                        <div className="p-4">
+                          <div className="flex justify-between">
+                            <div className="flex items-center">
+                              <div className="flex h-14 w-14 mr-4 rounded-lg bg-green-100 items-center justify-center">
+                                <TrendingUp className="h-8 w-8 text-green-600" />
+                              </div>
+                              <div>
+                                <h3 className="text-lg font-medium text-gray-800">{streak.title}</h3>
+                                <p className="text-sm text-gray-500">{streak.activity}</p>
+                              </div>
                             </div>
-                            <div>
-                              <h3 className="text-lg font-medium text-gray-800">{streak.title}</h3>
-                              <p className="text-sm text-gray-500">{streak.activity}</p>
+
+                            <div className="flex space-x-1">
+                              <button
+                                onClick={() => handleNavigation(`/portfolio/streaks/edit/${streak._id}`)}
+                                className="text-gray-500 hover:text-green-600"
+                                disabled={actionLoading}
+                                aria-label="Edit streak"
+                              >
+                                <Edit className="h-4 w-4" />
+                              </button>
+                              <button
+                                onClick={() => handleDeleteStreak(streak._id)}
+                                className="text-gray-500 hover:text-red-600"
+                                disabled={actionLoading}
+                                aria-label="Delete streak"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </button>
                             </div>
                           </div>
 
-                          <div className="flex space-x-1">
-                            <button
-                              onClick={() => handleNavigation(`/portfolio/streaks/edit/${streak._id}`)}
-                              className="text-gray-500 hover:text-green-600"
-                              disabled={actionLoading}
-                              aria-label="Edit streak"
-                            >
-                              <Edit className="h-4 w-4" />
-                            </button>
-                            <button
-                              onClick={() => handleDeleteStreak(streak._id)}
-                              className="text-gray-500 hover:text-red-600"
-                              disabled={actionLoading}
-                              aria-label="Delete streak"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </button>
-                          </div>
-                        </div>
-
-                        <div className="mt-4 flex justify-between items-center">
-                          <div className="flex items-center">
-                            <div className="p-2 rounded-md bg-green-100 text-green-800">
-                              <Calendar className="h-4 w-4" />
+                          <div className="mt-4 flex justify-between items-center">
+                            <div className="flex items-center">
+                              <div className="p-2 rounded-md bg-green-100 text-green-800">
+                                <Calendar className="h-4 w-4" />
+                              </div>
+                              <span className="ml-2 text-sm text-gray-600">
+                                Started: {new Date(streak.startDate).toLocaleDateString()}
+                              </span>
                             </div>
-                            <span className="ml-2 text-sm text-gray-600">
-                              Started: {new Date(streak.startDate).toLocaleDateString()}
-                            </span>
+
+                            <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
+                              {streak.currentStreak} day streak
+                            </div>
                           </div>
 
-                          <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
-                            {streak.currentStreak} day streak
+                          <div className="mt-4">
+                            <div className="w-full bg-gray-200 rounded-full h-2 relative">
+                              {streak.longestStreak > 0 ? (
+                                <div
+                                  className="bg-green-500 h-2 rounded-full"
+                                  style={{ width: `${(streak.currentStreak / streak.longestStreak) * 100}%` }}
+                                ></div>
+                              ) : (
+                                <div className="bg-green-500 h-2 rounded-full w-0"></div>
+                              )}
+
+                              {/** Show "Today" dot/label if user checked in today */}
+                              {hasCheckedInToday && (
+                                <div
+                                  className="absolute top-[-8px] flex items-center gap-1"
+                                  style={{
+                                    left: `${(streak.currentStreak / streak.longestStreak) * 100}%`,
+                                    transform: 'translateX(-50%)'
+                                  }}
+                                >
+                                  <div className="h-3 w-3 rounded-full bg-green-500 border-2 border-white shadow-lg animate-ping"></div>
+                                  <span className="text-xs text-green-600 font-medium">Today</span>
+                                </div>
+                              )}
+
+                            </div>
+
+                            <div className="mt-1 flex justify-between text-xs text-gray-500">
+                              <span>Goal: {streak.target}</span>
+                              <span>Longest: {streak.longestStreak} days</span>
+                            </div>
                           </div>
+
+                          <button
+                            onClick={() => handleCheckIn(streak)}
+                            className={`mt-4 block w-full py-2 px-4 rounded-lg text-white text-center transition ${!isCheckInAllowed
+                              ? 'bg-gray-400 cursor-not-allowed'
+                              : hasCheckedInToday
+                                ? 'bg-green-400 cursor-not-allowed'
+                                : 'bg-green-600 hover:bg-green-700'
+                              }`}
+                            disabled={!isCheckInAllowed || hasCheckedInToday || actionLoading}
+                          >
+                            {!isCheckInAllowed
+                              ? `Starts on ${new Date(streak.startDate).toLocaleDateString()}`
+                              : hasCheckedInToday
+                                ? 'Checked in for today'
+                                : 'Check In'}
+                          </button>
+
                         </div>
-
-                        <div className="mt-4">
-                          <div className="w-full bg-gray-200 rounded-full h-2">
-                            {streak.longestStreak > 0 ? (
-                              <div
-                                className="bg-green-500 h-2 rounded-full"
-                                style={{ width: `${(streak.currentStreak / streak.longestStreak) * 100}%` }}
-                              ></div>
-                            ) : (
-                              <div className="bg-green-500 h-2 rounded-full w-0"></div>
-                            )}
-                          </div>
-                          <div className="mt-1 flex justify-between text-xs text-gray-500">
-                            <span>Goal: {streak.target}</span>
-                            <span>Longest: {streak.longestStreak} days</span>
-                          </div>
-                        </div>
-
-                        <Link
-                          to={`/portfolio/streaks/${streak.id}`}
-                          className="mt-4 block w-full py-2 px-4 bg-green-600 text-white text-center rounded-lg hover:bg-green-700"
-                        >
-                          Check In
-                        </Link>
                       </div>
-                    </div>
-                  ))}
+                    )
+                  })}
                 </div>
               ) : (
                 <div className="bg-white rounded-xl shadow-md p-8 text-center">
