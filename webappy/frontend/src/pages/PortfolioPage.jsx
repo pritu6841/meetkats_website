@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useCallback,useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { PlusCircle, Edit, Trash2, Globe, Github, Youtube, Star, Calendar, Award, TrendingUp } from 'lucide-react';
 import portfolioService from '../services/portfolioService';
 import Loader from '../components/common/Loader';
 import { useToast } from "../components/common/Toast";
-
-
-const PortfolioPage = () => {
+import Sidebar from '../components/common/Navbar';
+import api from "../services/api";
+const PortfolioPage = ({user,onLogout}) => {
   const [projects, setProjects] = useState([]);
   const [achievements, setAchievements] = useState([]);
   const [streaks, setStreaks] = useState([]);
@@ -50,25 +50,25 @@ const PortfolioPage = () => {
   useEffect(() => {
     fetchPortfolio();
   }, [fetchPortfolio]);
-// const [todayStr, setTodayStr] = useState(new Date().toLocaleDateString('en-CA'));
-const [todayStr, setTodayStr] = useState('2025-06-23');
-const todayRef = useRef(todayStr);
+  // const [todayStr, setTodayStr] = useState(new Date().toLocaleDateString('en-CA'));
+  const [todayStr, setTodayStr] = useState('2025-06-23');
+  const todayRef = useRef(todayStr);
 
-useEffect(() => {
-  todayRef.current = todayStr; 
-}, [todayStr]);
+  useEffect(() => {
+    todayRef.current = todayStr;
+  }, [todayStr]);
 
-useEffect(() => {
-  const interval = setInterval(() => {
-    const currentDate = new Date().toLocaleDateString('en-CA');
-    if (currentDate !== todayRef.current) {
-      setTodayStr(currentDate);  
-      fetchPortfolio();          
-    }
-  }, 5 * 60 * 1000); 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const currentDate = new Date().toLocaleDateString('en-CA');
+      if (currentDate !== todayRef.current) {
+        setTodayStr(currentDate);
+        fetchPortfolio();
+      }
+    }, 5 * 60 * 1000);
 
-  return () => clearInterval(interval);
-}, [fetchPortfolio]); 
+    return () => clearInterval(interval);
+  }, [fetchPortfolio]);
 
 
 
@@ -146,10 +146,16 @@ useEffect(() => {
         setActionLoading(true);
         await portfolioService.deleteStreak(streakId);
         setStreaks(streaks.filter(streak => streak.id !== streakId));
-        toast.success('Streak deleted successfully');
+        toast.success({
+          title: 'Streak deleted successfully!',
+          description: 'You have successfully deleted a streak.',
+        });
       } catch (err) {
         console.error('Error deleting streak:', err);
-        toast.error('Failed to delete streak. Please try again.');
+          toast.error({
+        title: 'Deletion Failed',
+        description: err?.response?.data?.error || err.message || 'Something went wrong.',
+      });
       } finally {
         setActionLoading(false);
       }
@@ -188,7 +194,8 @@ useEffect(() => {
 
   return (
     <div className="flex-1 overflow-auto bg-gray-100 min-h-screen">
-      <div className="md:pt-0 pt-16">
+      <Sidebar user={user} onLogout={onLogout} />
+      <div className="md:pt-0 pt-24 mt-20">
         <main className="max-w-7xl mx-auto p-4 md:p-6">
           {/* Loading overlay for actions */}
           {actionLoading && (
@@ -219,7 +226,7 @@ useEffect(() => {
                   onClick={() => handleNavigation('/portfolio/projects/new')}
                   className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center cursor-not-allowed"
                   disabled
-                  // disabled={actionLoading}
+                // disabled={actionLoading}
                 >
                   <PlusCircle className="mr-2 h-4 w-4" /> New Project
                 </button>
@@ -227,7 +234,7 @@ useEffect(() => {
                   onClick={() => handleNavigation('/portfolio/achievements/new')}
                   className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center cursor-not-allowed"
                   disabled
-                  // disabled={actionLoading}
+                // disabled={actionLoading}
                 >
                   <PlusCircle className="mr-2 h-4 w-4" /> New Achievement
                 </button>

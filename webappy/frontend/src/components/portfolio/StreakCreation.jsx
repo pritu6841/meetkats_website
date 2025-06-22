@@ -74,7 +74,7 @@ const getTodayDate = () => {
         response = await portfolioService.createStreak(formData);
       }
 
-      navigate(`/portfolio/streaks/${response._id}`);
+      navigate(`/portfolio`);
     } catch (err) {
       console.error('Error submitting streak:', err);
       setError(err.response?.data?.error || 'Error saving streak. Please try again.');
