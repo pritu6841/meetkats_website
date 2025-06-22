@@ -5,8 +5,10 @@ import portfolioService from '../services/portfolioService';
 import Loader from '../components/common/Loader';
 import { useToast } from "../components/common/Toast";
 import Sidebar from '../components/common/Navbar';
+import { useAuth } from './../context/AuthContext';
 import api from "../services/api";
-const PortfolioPage = ({user,onLogout}) => {
+const PortfolioPage = () => {
+  const { user,onLogout } = useAuth();
   const [projects, setProjects] = useState([]);
   const [achievements, setAchievements] = useState([]);
   const [streaks, setStreaks] = useState([]);
