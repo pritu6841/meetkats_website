@@ -64,6 +64,7 @@ import EditFormPage from './pages/EditFormPage';
 import CouponManagementPage from './pages/CouponManagementPage';
 import QRCertificateGenerator from "./pages/CertificateCreation.jsx"
 import RegisterEvent from './pages/RegisterEvent';
+import QuizPlatform from './pages/quiz_platform/QuizPlatform';
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
   const { user, isLoading } = useAuth();
@@ -401,6 +402,9 @@ const App = () => {
                 <Discover />
               </ProtectedRoute>
             } />
+
+            {/* Quiz Platform Route */}
+            <Route path="/quiz-platform" element={<QuizPlatform />} />
 
             {/* Redirect root to dashboard if logged in, otherwise to landing page */}
             <Route path="/" element={
