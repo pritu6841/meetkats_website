@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { useAuth } from "../../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { saveQuizResult } from "../../supabase/quizApi";
 
 // Hardcoded quiz data
@@ -436,7 +436,6 @@ const QuizPlatform = () => {
       >
         Start Quiz
       </button>
-      {/* Leaderboard button removed for users */}
     </div>
   );
 
@@ -456,7 +455,6 @@ const QuizPlatform = () => {
       >
         Back to Home
       </button>
-      {/* Leaderboard button removed for users */}
     </div>
   );
 
