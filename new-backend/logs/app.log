@@ -1273,3 +1273,44 @@
 {"service":"chat-api","level":"info","message":"Email service initialized","timestamp":"2025-03-31T03:52:53.831Z"}
 {"message":"MongoDB transport added to security logger","level":"info","service":"chat-api","timestamp":"2025-03-31T03:52:55.067Z"}
 {"service":"chat-api","level":"warn","message":"Redis connection failed, using in-memory adapter: ","timestamp":"2025-03-31T03:52:55.117Z"}
+{"service":"chat-api","level":"info","message":"Google strategy configured","timestamp":"2025-07-22T15:24:12.888Z"}
+{"service":"chat-api","level":"info","message":"LinkedIn strategy configured","timestamp":"2025-07-22T15:24:12.890Z"}
+{"service":"chat-api","level":"info","message":"Cloudinary storage handler initialized","timestamp":"2025-07-22T15:24:13.921Z"}
+{"service":"chat-api","level":"info","message":"PhonePe service initialized in PRODUCTION mode","timestamp":"2025-07-22T15:24:14.468Z"}
+{"service":"chat-api","level":"warn","message":"Email templates directory not found: D:\\quizzzz\\meetkats_website\\new-backend\\templates\\emails","timestamp":"2025-07-22T15:24:14.642Z"}
+{"service":"chat-api","level":"info","message":"Email service initialized","timestamp":"2025-07-22T15:24:14.643Z"}
+{"message":"MongoDB transport added to security logger","level":"info","service":"chat-api","timestamp":"2025-07-22T15:24:15.289Z"}
+{"service":"chat-api","level":"warn","message":"Redis connection failed, using in-memory adapter: connect ECONNREFUSED ::1:6379","timestamp":"2025-07-22T15:24:15.315Z"}
+{"service":"chat-api","level":"info","message":"Socket events handler initialized","timestamp":"2025-07-22T15:24:15.318Z"}
+{"service":"chat-api","level":"info","message":"Socket events handler initialized","timestamp":"2025-07-22T15:24:15.319Z"}
+{"service":"chat-api","level":"error","message":"Logout error: SecurityLog.create is not a function","stack":"TypeError: SecurityLog.create is not a function\n    at exports.logout (D:\\quizzzz\\meetkats_website\\new-backend\\controllers\\auth.controller.js:859:23)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-07-22T15:25:55.497Z"}
+{"service":"chat-api","level":"info","message":"Google strategy configured","timestamp":"2025-07-22T15:27:47.516Z"}
+{"service":"chat-api","level":"info","message":"LinkedIn strategy configured","timestamp":"2025-07-22T15:27:47.517Z"}
+{"service":"chat-api","level":"info","message":"Cloudinary storage handler initialized","timestamp":"2025-07-22T15:27:48.446Z"}
+{"service":"chat-api","level":"info","message":"PhonePe service initialized in PRODUCTION mode","timestamp":"2025-07-22T15:27:49.064Z"}
+{"service":"chat-api","level":"warn","message":"Email templates directory not found: D:\\quizzzz\\meetkats_website\\new-backend\\templates\\emails","timestamp":"2025-07-22T15:27:49.316Z"}
+{"service":"chat-api","level":"info","message":"Email service initialized","timestamp":"2025-07-22T15:27:49.318Z"}
+{"message":"MongoDB transport added to security logger","level":"info","service":"chat-api","timestamp":"2025-07-22T15:27:50.403Z"}
+{"service":"chat-api","level":"warn","message":"Redis connection failed, using in-memory adapter: connect ECONNREFUSED ::1:6379","timestamp":"2025-07-22T15:27:50.507Z"}
+{"service":"chat-api","level":"info","message":"Socket events handler initialized","timestamp":"2025-07-22T15:27:50.519Z"}
+{"service":"chat-api","level":"info","message":"Socket events handler initialized","timestamp":"2025-07-22T15:27:50.520Z"}
+{"service":"chat-api","level":"info","message":"Google strategy configured","timestamp":"2025-07-22T15:31:17.379Z"}
+{"service":"chat-api","level":"info","message":"LinkedIn strategy configured","timestamp":"2025-07-22T15:31:17.380Z"}
+{"service":"chat-api","level":"info","message":"Cloudinary storage handler initialized","timestamp":"2025-07-22T15:31:18.382Z"}
+{"service":"chat-api","level":"info","message":"PhonePe service initialized in PRODUCTION mode","timestamp":"2025-07-22T15:31:18.929Z"}
+{"service":"chat-api","level":"warn","message":"Email templates directory not found: D:\\quizzzz\\meetkats_website\\new-backend\\templates\\emails","timestamp":"2025-07-22T15:31:19.080Z"}
+{"service":"chat-api","level":"info","message":"Email service initialized","timestamp":"2025-07-22T15:31:19.081Z"}
+{"message":"MongoDB transport added to security logger","level":"info","service":"chat-api","timestamp":"2025-07-22T15:31:20.662Z"}
+{"service":"chat-api","level":"warn","message":"Redis connection failed, using in-memory adapter: connect ECONNREFUSED ::1:6379","timestamp":"2025-07-22T15:31:20.689Z"}
+{"service":"chat-api","level":"info","message":"Socket events handler initialized","timestamp":"2025-07-22T15:31:20.692Z"}
+{"service":"chat-api","level":"info","message":"Socket events handler initialized","timestamp":"2025-07-22T15:31:20.693Z"}
+{"service":"chat-api","level":"info","message":"Google strategy configured","timestamp":"2025-07-22T16:42:22.577Z"}
+{"service":"chat-api","level":"info","message":"LinkedIn strategy configured","timestamp":"2025-07-22T16:42:22.578Z"}
+{"service":"chat-api","level":"info","message":"Cloudinary storage handler initialized","timestamp":"2025-07-22T16:42:23.846Z"}
+{"service":"chat-api","level":"info","message":"PhonePe service initialized in PRODUCTION mode","timestamp":"2025-07-22T16:42:24.518Z"}
+{"service":"chat-api","level":"warn","message":"Email templates directory not found: D:\\quizzzz\\meetkats_website\\new-backend\\templates\\emails","timestamp":"2025-07-22T16:42:24.699Z"}
+{"service":"chat-api","level":"info","message":"Email service initialized","timestamp":"2025-07-22T16:42:24.700Z"}
+{"message":"MongoDB transport added to security logger","level":"info","service":"chat-api","timestamp":"2025-07-22T16:42:25.413Z"}
+{"service":"chat-api","level":"warn","message":"Redis connection failed, using in-memory adapter: connect ECONNREFUSED ::1:6379","timestamp":"2025-07-22T16:42:25.519Z"}
+{"service":"chat-api","level":"info","message":"Socket events handler initialized","timestamp":"2025-07-22T16:42:25.527Z"}
+{"service":"chat-api","level":"info","message":"Socket events handler initialized","timestamp":"2025-07-22T16:42:25.527Z"}
